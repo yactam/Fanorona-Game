@@ -1,8 +1,13 @@
 # Fanorona
 
+[![My Skills](https://skillicons.dev/icons?i=ocaml,git,gitlab,github,vim,vscode)](https://skillicons.dev)
+
+
 ## Description
 
 Fanorona is our first project using <b>The OCaml programming language</b> which is a strategy board game for two players. The game is indigenous to Madagascar..
+
+![fanorona](https://www.boardspace.net/images/fanorona-start.jpg)
 
 ## Building Fanorona
 
