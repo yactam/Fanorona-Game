@@ -5,11 +5,11 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github yactam/fanorona))
 
-(authors "Author Name")
+(authors "TAMDRARI Yacine" "ROUYER Aymeric")
 
-(maintainers "Maintainer Name")
+(maintainers "TAMDRARI Yacine")
 
 (license LICENSE)
 
@@ -17,10 +17,10 @@
 
 (package
  (name fanorona)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (synopsis "Fanorona board game developed using OCaml")
+ (description "Fanorona is our first project using The OCaml programming language which is a strategy board game for two players. The game is indigenous to Madagascar..")
  (depends ocaml dune)
  (tags
-  (topics "to describe" your project)))
+  (topics "OCaml" "Fanorona" "Board game" "2D game" your project)))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
