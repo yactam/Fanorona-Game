@@ -9,6 +9,10 @@ Fanorona is our first project using <b>The OCaml programming language</b> which 
 
 ![fanorona](https://www.boardspace.net/images/fanorona-start.jpg)
 
+## Authors
+TAMDRARI Yacine
+ROUYER Aymeric
+
 ## Building Fanorona
 
 To build the project just lunch this command in the terminal:
