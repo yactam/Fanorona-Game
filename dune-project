@@ -19,7 +19,7 @@
  (name fanorona)
  (synopsis "Fanorona board game developed using OCaml")
  (description "Fanorona is our first project using The OCaml programming language which is a strategy board game for two players. The game is indigenous to Madagascar..")
- (depends ocaml dune)
+ (depends ocaml dune ppx_deriving)
  (tags
   (topics "OCaml" "Fanorona" "Board game" "2D game" your project)))
 

@@ -13,6 +13,7 @@ bug-reports: "https://github.com/yactam/fanorona/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.11"}
+  "ppx_deriving"
   "odoc" {with-doc}
 ]
 build: [
