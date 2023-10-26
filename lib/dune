@@ -1,6 +1,4 @@
 (library
  (name fanorona)
  (preprocess
-   (pps ppx_deriving.eq ppx_deriving.show)
- )
-)
+  (pps ppx_deriving.eq ppx_deriving.show)))
