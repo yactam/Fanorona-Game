@@ -55,6 +55,29 @@ type dir =
   | SE
       (** A direction is one of: North [N], South [S], East [E], West [W], North-East [NE], South-West [SW], North-West [NW], South-East [SE]. *)
 
+let get_vect = function
+  | N -> (-1, 0)
+  | S -> (1, 0)
+  | E -> (0, 1)
+  | W -> (0, -1)
+  | NE -> (-1, 1)
+  | SW -> (1, -1)
+  | NW -> (-1, -1)
+  | SE -> (1, 1)
+
+let rev_dir = function
+  | N -> S
+  | S -> N
+  | E -> W
+  | W -> E
+  | NE -> SW
+  | SW -> NE
+  | NW -> SE
+  | SE -> NW
+
+type move = { position : pos; direction : dir }
+(** A move is represented by a starting position and a direction *)
+
 (** A cell in the board is either [Empty] or containing a [Pawn] of [Player] player  *)
 type cell = Empty | Pawn of player [@@deriving eq]
 
@@ -84,19 +107,22 @@ let pp_cell out_c = function
   | Pawn p -> Format.fprintf out_c "%a" pp_player p
 
 let pp_board out_c board =
-  let row_sep = String.concat "" (List.init nb_cols (fun _ -> "+---+")) in
+  let row_sep = String.concat "" (List.init nb_cols (fun _ -> "+---")) in
   let print_row out_c row =
     List.init nb_cols Fun.id
     |> List.iter (fun j ->
-           Format.fprintf out_c "| %a " pp_cell (get board (H row) (V j)))
+           if (row + j) mod 2 = 0 then
+             Format.fprintf out_c "| \x1B[1m%a\x1B[0m " pp_cell
+               (get board (H row) (V j))
+           else Format.fprintf out_c "| %a " pp_cell (get board (H row) (V j)))
   in
-  Format.fprintf out_c "%s" row_sep;
+  Format.fprintf out_c "%s+" row_sep;
   Format.fprintf out_c "@,";
   List.iteri
     (fun i _ ->
       Format.fprintf out_c "%a|" print_row i;
       Format.fprintf out_c "@,";
-      Format.fprintf out_c "%s" row_sep;
+      Format.fprintf out_c "%s+" row_sep;
       Format.fprintf out_c "@,")
     board
 
