@@ -1,2 +1,4 @@
-(test
- (name fanorona))
+(tests
+ (names test_engine)
+ (libraries fanorona alcotest))
+

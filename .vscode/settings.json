@@ -1,6 +1,6 @@
 {
     "ocaml.sandbox": {
         "kind": "opam",
-        "switch": "${workspaceFolder:fanorona}"
+        "switch": "/home/arouyer/Classes/ppo5-2023"
     }
 }

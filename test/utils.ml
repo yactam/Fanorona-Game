@@ -1,4 +1,4 @@
-open lib
+open Fanorona.Engine
 
 let player = 
   Alcotest.testable
@@ -36,7 +36,7 @@ let board_2 =
       [ None ;  None ;  None ; Pawn W;  None ; Pawn W; Pawn W; Pawn W; Pawn W]
     ]
 
-let init_board = 
+let board_2_set1_1_B = 
   init 
   [
       [Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B];
