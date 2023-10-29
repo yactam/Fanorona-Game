@@ -10,7 +10,24 @@ let () =
   let open Alcotest in 
   run "Engine"
     [
-      { "init-get",
-        
-      }
+      ( "init-get",
+        [
+
+        ]);
+      ( "pp",
+        [
+
+        ]);
+      ("set",
+        [
+
+        ]);
+      ("free",
+        [
+          
+        ]);
+      ("win",
+        [
+          
+        ]);
     ]
