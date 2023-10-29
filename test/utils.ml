@@ -1,4 +1,4 @@
-open Fanorona.Engine
+open lib
 
 let player = 
   Alcotest.testable
