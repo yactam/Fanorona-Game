@@ -2,7 +2,7 @@ open Fanorona.Engine
 open Utils
 
 let board_1_get res i j () =
-  Alcotest.(check (option player))
+  Alcotest.(check (cell))
     "same result" res
     (get board_1 (H i) (V j))
 
@@ -12,14 +12,14 @@ let () =
     [
       ( "init-get",
         [
-          test_case "board_1-get-0-0" `Quick (board_9x9_get Empty 0 0);
-          test_case "board_1-get-0-1" `Quick (board_9x9_get Pawn W 0 1);
-          test_case "board_1-get-2-5" `Quick (board_9x9_get Pawn B 2 5);
-          test_case "board_1-get-3-7" `Quick (board_9x9_get Empty 3 7);
-          test_case "board_1-get-1-1" `Quick (board_9x9_get Pawn W 1 1);
-          test_case "board_1-get-3-0" `Quick (board_9x9_get Pawn W 3 0);
-          test_case "board_1-get-2-1" `Quick (board_9x9_get Empty 2 1);
-          test_case "board_1-get-4-4" `Quick (board_9x9_get Pawn B 4 4);
+          test_case "board_1-get-0-0" `Quick (board_1_get Empty 0 0);
+          test_case "board_1-get-0-1" `Quick (board_1_get (Pawn W) 0 1);
+          test_case "board_1-get-2-5" `Quick (board_1_get (Pawn B) 2 5);
+          test_case "board_1-get-3-7" `Quick (board_1_get Empty 3 7);
+          test_case "board_1-get-1-1" `Quick (board_1_get (Pawn W) 1 1);
+          test_case "board_1-get-3-0" `Quick (board_1_get (Pawn W) 3 0);
+          test_case "board_1-get-2-1" `Quick (board_1_get Empty 2 1);
+          test_case "board_1-get-4-4" `Quick (board_1_get (Pawn B) 4 4);
         ]);
       (*( "pp",
         [
@@ -38,15 +38,13 @@ let () =
             Alcotest.(check_raises) "Occupied cell" Occupied_cell (fun () ->
               ignore (set board_1 (H 4) (V 2) W)));
           test_case "board_2-set-success" `Quick (fun () ->
-            Alcotest.(check (option player))
-              "same result" Pawn B
-              (let () = set board_1 (H 1) (V 1) B 
-              in
-              get board_2 (H 1) (V 1)));
+            Alcotest.(check cell)
+              "same result" (Pawn B)
+              (get (set board_2 (H 1) (V 1) B) (H 1) (V 1)));
           test_case "board_2_compare" `Quick (fun () ->
               Alcotest.(check board)
                 "same result" board_2_set1_1_B
-                (set example3 (H 1) (V 1) B));
+                (set board_2 (H 1) (V 1) B));
 
         ]);
       ("free_cells",
@@ -61,7 +59,7 @@ let () =
               "same result"
               [
                ((H 1), (V 2)); ((H 1), (V 5)); 
-               ((H 2), (V 0)); ((H 2), (V 1)); ((H 2), (V 4)); ((H 2), (V 5))
+               ((H 2), (V 0)); ((H 2), (V 1)); ((H 2), (V 4)); ((H 2), (V 5));
                ((H 3), (V 3));
                ((H 4), (V 4))]
               (free_cells board_3));
