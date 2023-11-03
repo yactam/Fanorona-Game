@@ -168,6 +168,7 @@ let win board player =
          | _ -> true)
   |> List.length = 0
 
+(** check if the [move] destination is in the board and the destination cell is empty and the [move] position contains a [cell] of pawn [player] *)
 let is_valid_move_position board move player =
   match destination_pos move with
   | None -> false
@@ -176,6 +177,7 @@ let is_valid_move_position board move player =
       let target = get2 board p in
       cell = Pawn player && target = Empty
 
+(** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
 let is_capture_move board move player =
   if not (is_valid_move_position board move player) then false
   else
@@ -191,6 +193,7 @@ let is_capture_move board move player =
             | Pawn p when p = opponent player -> true
             | _ -> false))
 
+(** get a list of all possible moves of player [player] on board [board] but not some of them may be illegal in a specific game *)
 let get_all_moves board player =
   let all_positions =
     List.init nb_rows (fun i -> List.init nb_cols (fun j -> (Pos.h i, Pos.v j)))
