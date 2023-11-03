@@ -44,16 +44,13 @@ let pp_vpos out_channel = function
 type pos = hpos * vpos
 (** A pair of coordinates that combines an [hpos] and a [vpos] to represents positions on the board *)
 
-type dir =
-  | N
-  | S
-  | E
-  | W
-  | NE
-  | SW
-  | NW
-  | SE
-      (** A direction is one of: North [N], South [S], East [E], West [W], North-East [NE], South-West [SW], North-West [NW], South-East [SE]. *)
+let pp_pos out_channel pos =
+  let hp, vp = pos in
+  Format.fprintf out_channel "(%a, %a)" pp_hpos hp pp_vpos vp
+
+(** A direction is one of: North [N], South [S], East [E], West [W], North-East [NE], South-West [SW], North-West [NW], South-East [SE]. *)
+type dir = N | S | E | W | NE | SW | NW | SE
+[@@deriving show { with_path = false }]
 
 let get_vect = function
   | N -> (-1, 0)
@@ -78,6 +75,13 @@ let rev_dir = function
 type move = { position : pos; direction : dir }
 (** A move is represented by a starting position and a direction *)
 
+let pp_move out_c move =
+  Format.fprintf out_c "{%a; %s}" pp_pos move.position (show_dir move.direction)
+
+let destination_pos move =
+  let H i, V j = move.position and i', j' = get_vect move.direction in
+  try Some (Pos.h (i + i'), Pos.v (j + j')) with _ -> None
+
 (** A cell in the board is either [Empty] or containing a [Pawn] of [Player] player  *)
 type cell = Empty | Pawn of player [@@deriving eq]
 
@@ -101,6 +105,9 @@ let initial_state_5x9 =
 
 (** Get from the board the [cell] at position([i], [j]) *)
 let get board (H i) (V j) = List.nth (List.nth board i) j
+
+let get2 board (H i, V j) = get board (H i) (V j)
+(* currified version of get *)
 
 let pp_cell out_c = function
   | Empty -> Format.fprintf out_c "."

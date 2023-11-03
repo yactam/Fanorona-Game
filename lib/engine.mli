@@ -39,6 +39,8 @@ type move = { position : pos; direction : dir }
 type cell = Empty | Pawn of player
 
 val equal_cell : cell -> cell -> bool
+val pp_pos : Format.formatter -> pos -> unit
+val pp_move : Format.formatter -> move -> unit
 
 type board = cell list list
 
