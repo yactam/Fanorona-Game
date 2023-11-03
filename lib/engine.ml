@@ -167,3 +167,11 @@ let win board player =
          | Pawn p when p = player -> false
          | _ -> true)
   |> List.length = 0
+
+let is_valid_move_position board move player =
+  match destination_pos move with
+  | None -> false
+  | Some p ->
+      let cell = get2 board move.position in
+      let target = get2 board p in
+      cell = Pawn player && target = Empty
