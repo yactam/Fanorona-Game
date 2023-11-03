@@ -60,3 +60,4 @@ val free_cells : cell list list -> (hpos * vpos) list
 val win : cell list list -> player -> bool
 val is_valid_move_position : board -> move -> player -> bool
 val is_capture_move : board -> move -> player -> bool
+val get_all_moves : board -> player -> move list

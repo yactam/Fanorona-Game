@@ -190,3 +190,17 @@ let is_capture_move board move player =
             match cell' with
             | Pawn p when p = opponent player -> true
             | _ -> false))
+
+let get_all_moves board player =
+  let all_positions =
+    List.init nb_rows (fun i -> List.init nb_cols (fun j -> (Pos.h i, Pos.v j)))
+  in
+  all_positions |> List.flatten
+  |> List.map (fun pos ->
+         let all_directions = [ N; S; E; W; NE; SW; NW; SE ] in
+         all_directions
+         |> List.filter (fun dir ->
+                let move = { position = pos; direction = dir } in
+                is_valid_move_position board move player)
+         |> List.map (fun dir -> { position = pos; direction = dir }))
+  |> List.flatten
