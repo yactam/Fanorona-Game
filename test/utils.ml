@@ -16,6 +16,9 @@ let hpos =
 let vpos =
   Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_vpos)) equal_vpos
 
+let cell = 
+  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_cell)) equal_cell
+
 let board_1 =
   init 
     [
@@ -36,7 +39,7 @@ let board_2 =
       [ None ;  None ;  None ; Pawn W;  None ; Pawn W; Pawn W; Pawn W; Pawn W]
     ]
 
-let board_2_set1_1_B = 
+let board_2_set0_1_B = 
   init 
   [
       [Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B; Pawn B];
