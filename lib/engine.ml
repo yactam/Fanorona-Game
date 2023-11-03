@@ -147,7 +147,7 @@ let set board i j p =
 (** Return a [(hpos * vpos) list] of free cells in the board [board] *)
 let free_cells board =
   List.init (nb_rows * nb_cols) (fun i ->
-      (Pos.h (i / nb_cols), Pos.v (i mod nb_rows)))
+      (Pos.h (i / nb_cols), Pos.v (i mod nb_cols)))
   |> List.filter (fun (i, j) ->
          match get board i j with Empty -> true | _ -> false)
 
