@@ -41,7 +41,7 @@ let pp_hpos out_channel = function
 let pp_vpos out_channel = function
   | V j -> Format.fprintf out_channel "Pos.(v %d)" j
 
-type pos = hpos * vpos
+type pos = hpos * vpos [@@deriving eq]
 (** A pair of coordinates that combines an [hpos] and a [vpos] to represents positions on the board *)
 
 let pp_pos out_channel pos =
@@ -50,7 +50,8 @@ let pp_pos out_channel pos =
 
 (** A direction is one of: North [N], South [S], East [E], West [W], North-East [NE], South-West [SW], North-West [NW], South-East [SE]. *)
 type dir = N | S | E | W | NE | SW | NW | SE
-[@@deriving show { with_path = false }]
+[@@deriving show { with_path = false }, eq]
+
 
 let get_vect = function
   | N -> (-1, 0)
@@ -72,12 +73,12 @@ let rev_dir = function
   | NW -> SE
   | SE -> NW
 
-type move = { position : pos; direction : dir }
+type move = { position : pos; direction : dir } [@@deriving eq]
 (** A move is represented by a starting position and a direction *)
 
 let pp_move out_c move =
   Format.fprintf out_c "{%a; %s}" pp_pos move.position (show_dir move.direction)
-
+ 
 let destination_pos move =
   let H i, V j = move.position and i', j' = get_vect move.direction in
   try Some (Pos.h (i + i'), Pos.v (j + j')) with _ -> None

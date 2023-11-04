@@ -11,13 +11,20 @@ let board =
     equal_board
 
 let hpos = 
-  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_hpos)) equal_hpos
+  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_hpos)) 
+  equal_hpos
 
 let vpos =
-  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_vpos)) equal_vpos
+  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_vpos)) 
+  equal_vpos
 
 let cell = 
-  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_cell)) equal_cell
+  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_cell)) 
+  equal_cell
+
+let move =
+  Alcotest.testable (Fmt.of_to_string (Format.asprintf "%a" pp_move)) 
+  equal_move
 
 let board_1 =
   init 
