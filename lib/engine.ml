@@ -52,7 +52,6 @@ let pp_pos out_channel pos =
 type dir = N | S | E | W | NE | SW | NW | SE
 [@@deriving show { with_path = false }, eq]
 
-
 let get_vect = function
   | N -> (-1, 0)
   | S -> (1, 0)
@@ -78,7 +77,7 @@ type move = { position : pos; direction : dir } [@@deriving eq]
 
 let pp_move out_c move =
   Format.fprintf out_c "{%a; %s}" pp_pos move.position (show_dir move.direction)
- 
+
 let destination_pos move =
   let H i, V j = move.position and i', j' = get_vect move.direction in
   try Some (Pos.h (i + i'), Pos.v (j + j')) with _ -> None
@@ -170,11 +169,12 @@ let win board player =
   |> List.length = 0
 
 let is_diagonal_move move =
-  let dir = move.direction in dir = SE || dir = SW || dir = NE || dir = NW
+  let dir = move.direction in
+  dir = SE || dir = SW || dir = NE || dir = NW
 
 let is_valid_diagonal_move move =
-  let (H i, V j) = move.position in 
-  is_diagonal_move move && ((i+j) mod 2 = 0)
+  let H i, V j = move.position in
+  is_diagonal_move move && (i + j) mod 2 = 0
 
 (** check if the [move] destination is in the board and the destination cell is empty and the [move] position contains a [cell] of pawn [player] *)
 let is_valid_move_position board move player =
@@ -183,7 +183,8 @@ let is_valid_move_position board move player =
   | Some p ->
       let cell = get2 board move.position in
       let target = get2 board p in
-      cell = Pawn player && target = Empty && (not (is_diagonal_move move) || is_valid_diagonal_move move)
+      cell = Pawn player && target = Empty
+      && ((not (is_diagonal_move move)) || is_valid_diagonal_move move)
 
 (** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
 let is_capture_move board move player =
@@ -192,14 +193,21 @@ let is_capture_move board move player =
     match destination_pos move with
     | None -> false
     | Some p -> (
-        let move' = { position = p; direction = move.direction } in
+        (* test if it's a capturing by approach *)
+        (let move' = { position = p; direction = move.direction } in
+         match destination_pos move' with
+         | None -> false
+         | Some p' -> get2 board p' = Pawn (opponent player))
+        ||
+        (* test if it's a capturing by withdrawal *)
+        let move' =
+          { position = move.position; direction = rev_dir move.direction }
+        in
         match destination_pos move' with
         | None -> false
-        | Some p' -> (
+        | Some p' ->
             let cell' = get2 board p' in
-            match cell' with
-            | Pawn p when p = opponent player -> true
-            | _ -> false))
+            cell' = Pawn (opponent player))
 
 (** get a list of all possible moves of player [player] on board [board] but not some of them may be illegal in a specific game *)
 let get_all_moves board player =
