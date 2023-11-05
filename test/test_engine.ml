@@ -155,42 +155,46 @@ let () =
               Alcotest.(check (list move))
                 "same result"
                 [
-                  { position = (Pos.(h 3), Pos.(v 4)); direction = N };
-                  { position = (Pos.(h 3), Pos.(v 3)); direction = NE };
-                  { position = (Pos.(h 3), Pos.(v 5)); direction = NW };
                   { position = (Pos.(h 2), Pos.(v 3)); direction = E };
+                  { position = (Pos.(h 3), Pos.(v 3)); direction = NE };
+                  { position = (Pos.(h 3), Pos.(v 4)); direction = N };
+                  { position = (Pos.(h 3), Pos.(v 5)); direction = NW };
                 ]
                 (get_all_moves initial_state_5x9 W));
           test_case "one valid capture move, one invalid escape move" `Quick
             (fun () ->
               Alcotest.(check (list move))
                 "same result"
-                [ { position = (Pos.(h 0), Pos.(v 1)); direction = W } ]
+                [
+                  { position = (Pos.(h 0), Pos.(v 1)); direction = S };
+                  { position = (Pos.(h 0), Pos.(v 1)); direction = W };
+                ]
                 (get_all_moves board_2_set0_1_B B));
           test_case "no capture moves" `Quick (fun () ->
               Alcotest.(check (list move))
                 "same result"
                 [
-                  { position = (Pos.(h 0), Pos.(v 4)); direction = N };
-                  { position = (Pos.(h 0), Pos.(v 4)); direction = E };
-                  { position = (Pos.(h 0), Pos.(v 4)); direction = S };
-                  { position = (Pos.(h 2), Pos.(v 0)); direction = W };
-                  { position = (Pos.(h 2), Pos.(v 0)); direction = SW };
-                  { position = (Pos.(h 2), Pos.(v 0)); direction = S };
-                  { position = (Pos.(h 2), Pos.(v 0)); direction = SE };
-                  { position = (Pos.(h 2), Pos.(v 0)); direction = E };
-                  { position = (Pos.(h 4), Pos.(v 3)); direction = E };
-                  { position = (Pos.(h 4), Pos.(v 3)); direction = N };
-                  { position = (Pos.(h 4), Pos.(v 3)); direction = W };
+                  { position = (Pos.(h 0), Pos.(v 2)); direction = S };
+                  { position = (Pos.(h 0), Pos.(v 2)); direction = E };
+                  { position = (Pos.(h 0), Pos.(v 2)); direction = W };
+                  { position = (Pos.(h 0), Pos.(v 2)); direction = SW };
+                  { position = (Pos.(h 0), Pos.(v 2)); direction = SE };
+                  { position = (Pos.(h 2), Pos.(v 7)); direction = N };
+                  { position = (Pos.(h 2), Pos.(v 7)); direction = E };
+                  { position = (Pos.(h 2), Pos.(v 7)); direction = W };
+                  { position = (Pos.(h 3), Pos.(v 0)); direction = N };
+                  { position = (Pos.(h 3), Pos.(v 0)); direction = S };
+                  { position = (Pos.(h 3), Pos.(v 0)); direction = E };
                   { position = (Pos.(h 3), Pos.(v 6)); direction = N };
                   { position = (Pos.(h 3), Pos.(v 6)); direction = W };
-                  { position = (Pos.(h 4), Pos.(v 6)); direction = NW };
-                  { position = (Pos.(h 3), Pos.(v 6)); direction = W };
-                  { position = (Pos.(h 2), Pos.(v 7)); direction = N };
-                  { position = (Pos.(h 2), Pos.(v 7)); direction = W };
-                  { position = (Pos.(h 3), Pos.(v 7)); direction = NW };
                   { position = (Pos.(h 3), Pos.(v 7)); direction = NE };
+                  { position = (Pos.(h 3), Pos.(v 7)); direction = NW };
                   { position = (Pos.(h 3), Pos.(v 8)); direction = N };
+                  { position = (Pos.(h 4), Pos.(v 3)); direction = N };
+                  { position = (Pos.(h 4), Pos.(v 3)); direction = E };
+                  { position = (Pos.(h 4), Pos.(v 3)); direction = W };
+                  { position = (Pos.(h 4), Pos.(v 6)); direction = W };
+                  { position = (Pos.(h 4), Pos.(v 6)); direction = NW };
                 ]
                 (get_all_moves board_2 W));
           test_case "no pawns" `Quick (fun () ->
