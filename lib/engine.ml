@@ -169,6 +169,13 @@ let win board player =
          | _ -> true)
   |> List.length = 0
 
+let is_diagonal_move move =
+  let dir = move.direction in dir = SE || dir = SW || dir = NE || dir = NW
+
+let is_valid_diagonal_move move =
+  let (H i, V j) = move.position in 
+  is_diagonal_move move && ((i+j) mod 2 = 0)
+
 (** check if the [move] destination is in the board and the destination cell is empty and the [move] position contains a [cell] of pawn [player] *)
 let is_valid_move_position board move player =
   match destination_pos move with
@@ -176,7 +183,7 @@ let is_valid_move_position board move player =
   | Some p ->
       let cell = get2 board move.position in
       let target = get2 board p in
-      cell = Pawn player && target = Empty
+      cell = Pawn player && target = Empty && (not (is_diagonal_move move) || is_valid_diagonal_move move)
 
 (** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
 let is_capture_move board move player =
