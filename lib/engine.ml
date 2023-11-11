@@ -199,29 +199,6 @@ let is_valid_move_position board move player =
       cell = Pawn player && target = Empty
       && ((not (is_diagonal_move move)) || is_valid_diagonal_move move)
 
-(** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
-let is_capture_move board move player =
-  if not (is_valid_move_position board move player) then false
-  else
-    match destination_pos move with
-    | None -> false
-    | Some p -> (
-        (* test if it's a capturing by approach *)
-        (let move' = { position = p; direction = move.direction } in
-         match destination_pos move' with
-         | None -> false
-         | Some p' -> get2 board p' = Pawn (opponent player))
-        ||
-        (* test if it's a capturing by withdrawal *)
-        let move' =
-          { position = move.position; direction = rev_dir move.direction }
-        in
-        match destination_pos move' with
-        | None -> false
-        | Some p' ->
-            let cell' = get2 board p' in
-            cell' = Pawn (opponent player))
-
 (** get a list of all possible moves of player [player] on board [board] but not some of them may be illegal in a specific game *)
 let get_all_moves board player =
   let all_positions =
@@ -256,10 +233,14 @@ let type_capture_move board move player =
         | None, None -> None
         | None, Some p' -> if is_opponent_pawn p' then Some Withdrawal else None
         | Some p', None -> if is_opponent_pawn p' then Some Approach else None
-        | Some p', Some p'' ->
-            if is_opponent_pawn p' && is_opponent_pawn p'' then Some Both
-            else None)
+        | Some p', Some p'' -> (
+            match (is_opponent_pawn p', is_opponent_pawn p'') with
+            | true, true -> Some Both
+            | true, false -> Some Approach
+            | false, true -> Some Withdrawal
+            | false, false -> None))
 
+(** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
 let is_capture_move board move player =
   type_capture_move board move player <> None
 

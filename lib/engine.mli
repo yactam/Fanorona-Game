@@ -77,10 +77,22 @@ val win : cell list list -> player -> bool
 val is_diagonal_move : move -> bool
 val is_valid_diagonal_move : move -> bool
 val is_valid_move_position : cell list list -> move -> player -> bool
-val is_capture_move : cell list list -> move -> player -> bool
 val get_all_moves : cell list list -> player -> move list
 
 type capture = Approach | Withdrawal | Both
 
 val type_capture_move : cell list list -> move -> player -> capture option
 val is_capture_move : cell list list -> move -> player -> bool
+val aux_capture : cell list list -> pos -> dir -> player -> cell list list
+
+val make_capture_by_approach :
+  cell list list -> move -> player -> cell list list
+
+val make_capture_by_withdrawal :
+  cell list list -> move -> player -> cell list list
+
+exception Compulsory_capture
+exception Not_capture_by_approach
+exception Not_capture_by_withdrawal
+exception Choice_required
+exception Capture_move_restrictions_broken
