@@ -236,3 +236,29 @@ let get_all_moves board player =
                 is_valid_move_position board move player)
          |> List.map (fun dir -> { position = pos; direction = dir }))
   |> List.flatten
+
+type capture = Approach | Withdrawal | Both
+
+(** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
+let type_capture_move board move player =
+  if not (is_valid_move_position board move player) then None
+  else
+    let is_opponent_pawn p = get2 board p = Pawn (opponent player) in
+    match destination_pos move with
+    | None -> None
+    | Some p -> (
+        (* test if it's a capturing by approach or capturing by withdrawal *)
+        let move' = { position = p; direction = move.direction } in
+        let move'' =
+          { position = move.position; direction = rev_dir move.direction }
+        in
+        match (destination_pos move', destination_pos move'') with
+        | None, None -> None
+        | None, Some p' -> if is_opponent_pawn p' then Some Withdrawal else None
+        | Some p', None -> if is_opponent_pawn p' then Some Approach else None
+        | Some p', Some p'' ->
+            if is_opponent_pawn p' && is_opponent_pawn p'' then Some Both
+            else None)
+
+let is_capture_move board move player =
+  type_capture_move board move player <> None
