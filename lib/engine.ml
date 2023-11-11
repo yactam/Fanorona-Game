@@ -291,3 +291,9 @@ let make_capture_by_withdrawal board move player =
     get_destination_pos { position = next_rev_pos; direction = dir_rev }
   in
   aux_capture board opponent_pos dir_rev player
+
+exception Compulsory_capture
+exception Not_capture_by_approach
+exception Not_capture_by_withdrawal
+exception Choice_required
+exception Capture_move_restrictions_broken
