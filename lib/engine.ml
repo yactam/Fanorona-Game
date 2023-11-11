@@ -14,6 +14,7 @@ type vpos = V of int [@@deriving eq]
 
 exception Invalid_horizontal_pos
 exception Invalid_vertical_pos
+exception Invalid_position
 
 let nb_rows = 5
 let nb_cols = 9
@@ -81,6 +82,9 @@ let pp_move out_c move =
 let destination_pos move =
   let H i, V j = move.position and i', j' = get_vect move.direction in
   try Some (Pos.h (i + i'), Pos.v (j + j')) with _ -> None
+
+let get_destination_pos move =
+  match destination_pos move with None -> raise Invalid_position | Some p -> p
 
 (** A cell in the board is either [Empty] or containing a [Pawn] of [Player] player  *)
 type cell = Empty | Pawn of player [@@deriving eq]
@@ -150,6 +154,15 @@ let set board i j p =
          if equal_hpos i' i && equal_vpos j' j then
            match p' with Empty -> Pawn p | _ -> raise Occupied_cell
          else p')
+
+let set2 board (H i, V j) p = set board (H i) (V j) p
+
+let clear_cell board i j =
+  board
+  |> mapi (fun i' j' p' ->
+         if equal_hpos i i' && equal_vpos j' j then Empty else p')
+
+let clear_cell2 board (H i, V j) = clear_cell board (H i) (V j)
 
 (** Return a [(hpos * vpos) list] of free cells in the board [board] *)
 let free_cells board =
