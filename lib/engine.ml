@@ -262,3 +262,32 @@ let type_capture_move board move player =
 
 let is_capture_move board move player =
   type_capture_move board move player <> None
+
+let rec aux_capture board pos dir player =
+  match get2 board pos with
+  | Empty -> board
+  | Pawn p ->
+      if p = opponent player then
+        let board' = clear_cell2 board pos in
+        let pos' = destination_pos { position = pos; direction = dir } in
+        match pos' with
+        | None -> board'
+        | Some p' -> aux_capture board' p' dir player
+      else board
+
+let make_capture_by_approach board move player =
+  let dest_pos = get_destination_pos move in
+  let opponent_pos =
+    get_destination_pos { position = dest_pos; direction = move.direction }
+  in
+  aux_capture board opponent_pos move.direction player
+
+let make_capture_by_withdrawal board move player =
+  let dir_rev = rev_dir move.direction in
+  let next_rev_pos =
+    get_destination_pos { position = move.position; direction = dir_rev }
+  in
+  let opponent_pos =
+    get_destination_pos { position = next_rev_pos; direction = dir_rev }
+  in
+  aux_capture board opponent_pos dir_rev player
