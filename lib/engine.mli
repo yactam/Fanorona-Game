@@ -96,3 +96,13 @@ exception Not_capture_by_approach
 exception Not_capture_by_withdrawal
 exception Choice_required
 exception Capture_move_restrictions_broken
+
+val position_or_direction_already_executed : move list -> move -> bool
+
+val make_move :
+  cell list list ->
+  player ->
+  move ->
+  capture ->
+  move list ->
+  cell list list * move list

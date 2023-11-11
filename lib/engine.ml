@@ -278,3 +278,41 @@ exception Not_capture_by_approach
 exception Not_capture_by_withdrawal
 exception Choice_required
 exception Capture_move_restrictions_broken
+
+let position_or_direction_already_executed move_chain move =
+  List.exists
+    (fun m -> m.position = move.position || m.direction = move.direction)
+    move_chain
+
+let make_move board player move capture move_chain =
+  if not (is_valid_move_position board move player) then raise Invalid_position
+  else
+    let all_moves = get_all_moves board player in
+    match type_capture_move board move player with
+    | None -> (
+        let capture_moves =
+          List.filter (fun m -> is_capture_move board m player) all_moves
+        in
+        if
+          (not (is_capture_move board move player))
+          && List.length capture_moves > 0
+        then raise Compulsory_capture
+        else
+          match destination_pos move with
+          | None -> (board, move_chain)
+          | Some p' ->
+              let board_aux = clear_cell2 board move.position in
+              (set2 board_aux p' player, move :: move_chain))
+    | Some Approach ->
+        if capture = Approach then
+          if position_or_direction_already_executed move_chain move then
+            raise Capture_move_restrictions_broken
+          else (make_capture_by_approach board move player, move :: move_chain)
+        else raise Not_capture_by_approach
+    | Some Withdrawal ->
+        if capture = Withdrawal then
+          if position_or_direction_already_executed move_chain move then
+            raise Capture_move_restrictions_broken
+          else (make_capture_by_withdrawal board move player, move :: move_chain)
+        else raise Not_capture_by_withdrawal
+    | Some Both -> raise Choice_required
