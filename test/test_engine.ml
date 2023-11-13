@@ -259,25 +259,25 @@ let () =
         ( "position_or_direction_already_executed",
           [
             test_case "empty chain" `Quick (fun () -> 
-              Alcotest.(check bool) "same result" true
+              Alcotest.(check bool) "same result" false
               (let mc = [] in
               position_or_direction_already_executed mc {position = ((H 2),(V 3)); direction = W}));
             test_case "valid move" `Quick (fun () -> 
-              Alcotest.(check bool) "same result" true
+              Alcotest.(check bool) "same result" false
               (let mc = [
                 {position = ((H 3), (V 4)); direction = N};
                 {position = ((H 2), (V 4)); direction = E}
               ] in
               position_or_direction_already_executed mc {position = ((H 2),(V 3)); direction = NW}));
             test_case "return to pos" `Quick (fun () -> 
-              Alcotest.(check bool) "same result" false
+              Alcotest.(check bool) "same result" true
               (let mc = [
                 {position = ((H 3), (V 4)); direction = N};
-                {position = ((H 2), (V 4)); direction = E}
+                {position = ((H 2), (V 4)); direction = W}
               ] in
-              position_or_direction_already_executed mc {position = ((H 2),(V 3)); direction = W}));
+              position_or_direction_already_executed mc {position = ((H 2),(V 3)); direction = E}));
             test_case "same line" `Quick (fun () -> 
-              Alcotest.(check bool) "same result" false
+              Alcotest.(check bool) "same result" true
               (let mc = [
                 {position = ((H 3), (V 4)); direction = N};
                 {position = ((H 2), (V 4)); direction = E};
@@ -286,7 +286,7 @@ let () =
               ] in
               position_or_direction_already_executed mc {position = ((H 1),(V 4)); direction = N}));
             test_case "same diagonal" `Quick (fun () -> 
-              Alcotest.(check bool) "same result" false
+              Alcotest.(check bool) "same result" true
               (let mc = [
                 {position = ((H 4), (V 4)); direction = NW};
                 {position = ((H 3), (V 3)); direction = W};
