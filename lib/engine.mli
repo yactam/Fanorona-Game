@@ -103,6 +103,6 @@ val make_move :
   cell list list ->
   player ->
   move ->
-  capture ->
+  capture option ->
   move list ->
   cell list list * move list

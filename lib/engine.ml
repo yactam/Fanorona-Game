@@ -261,17 +261,18 @@ let make_capture_by_approach board move player =
   let opponent_pos =
     get_destination_pos { position = dest_pos; direction = move.direction }
   in
-  aux_capture board opponent_pos move.direction player
+  let board' = aux_capture board opponent_pos move.direction player in
+  let board' = clear_cell2 board' move.position in
+  set2 board' (get_destination_pos move) player
 
 let make_capture_by_withdrawal board move player =
   let dir_rev = rev_dir move.direction in
-  let next_rev_pos =
+  let opponent_pos =
     get_destination_pos { position = move.position; direction = dir_rev }
   in
-  let opponent_pos =
-    get_destination_pos { position = next_rev_pos; direction = dir_rev }
-  in
-  aux_capture board opponent_pos dir_rev player
+  let board' = aux_capture board opponent_pos dir_rev player in
+  let board' = clear_cell2 board' move.position in
+  set2 board' (get_destination_pos move) player
 
 exception Compulsory_capture
 exception Not_capture_by_approach
@@ -281,8 +282,13 @@ exception Capture_move_restrictions_broken
 
 let position_or_direction_already_executed move_chain move =
   List.exists
-    (fun m -> m.position = move.position || m.direction = move.direction)
+    (fun m ->
+      m.position = move.position
+      ||
+      match destination_pos move with None -> false | Some p -> m.position = p)
     move_chain
+  || List.length move_chain <> 0
+     && (List.hd move_chain).direction = move.direction
 
 let make_move board player move capture move_chain =
   if not (is_valid_move_position board move player) then raise Invalid_position
@@ -304,13 +310,13 @@ let make_move board player move capture move_chain =
               let board_aux = clear_cell2 board move.position in
               (set2 board_aux p' player, move :: move_chain))
     | Some Approach ->
-        if capture = Approach then
+        if capture = Some Approach then
           if position_or_direction_already_executed move_chain move then
             raise Capture_move_restrictions_broken
           else (make_capture_by_approach board move player, move :: move_chain)
         else raise Not_capture_by_approach
     | Some Withdrawal ->
-        if capture = Withdrawal then
+        if capture = Some Withdrawal then
           if position_or_direction_already_executed move_chain move then
             raise Capture_move_restrictions_broken
           else (make_capture_by_withdrawal board move player, move :: move_chain)

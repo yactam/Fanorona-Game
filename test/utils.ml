@@ -53,11 +53,11 @@ let board_2_set0_1_B =
     ]
 
 let pre_capture =
-  init 
+  init
     [
-      [Pawn B; Pawn B; Pawn W; Empty ; Empty ; Empty ; Pawn B; Empty ; Empty ;];
-      [Empty ; Pawn B; Pawn B; Pawn W; Empty ; Pawn B; Pawn W; Empty ; Empty ;];
-      [Pawn W; Empty ; Pawn B; Empty ; Pawn B; Empty ; Empty ; Pawn B; Empty ;];
-      [Pawn B; Pawn W; Empty ; Empty ; Empty ; Empty ; Pawn W; Pawn W; Pawn B;];
-      [Empty ; Empty ; Pawn W; Empty ; Pawn B; Pawn B; Empty ; Pawn B; Empty ;]
+      [ Pawn B; Pawn B; Pawn W; Empty; Empty; Empty; Pawn B; Empty; Empty ];
+      [ Empty; Pawn B; Pawn B; Pawn W; Empty; Pawn B; Pawn W; Empty; Empty ];
+      [ Pawn W; Empty; Pawn B; Empty; Pawn B; Empty; Empty; Pawn B; Empty ];
+      [ Pawn B; Pawn W; Empty; Empty; Empty; Empty; Pawn W; Pawn W; Pawn B ];
+      [ Empty; Empty; Pawn W; Empty; Pawn B; Pawn B; Empty; Pawn B; Empty ];
     ]

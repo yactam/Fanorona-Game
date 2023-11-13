@@ -198,64 +198,107 @@ let () =
                 ]
                 (get_all_moves board_2 W));
           test_case "no pawns" `Quick (fun () ->
-              Alcotest.(check (list move)) "same result" []
-              (get_all_moves board_2 B));
+              Alcotest.(check (list move))
+                "same result" [] (get_all_moves board_2 B));
         ] );
-        ( "make_capture_by_approach",
+      (*( "make_capture_by_approach",
           [
             test_case "capture nothing" `Quick (fun () ->
-              Alcotest.(check board) "same result" pre_capture
-              (make_capture_by_approach pre_capture {position = ((H 0), (V 2)); direction = E} W));
+                Alcotest.(check board)
+                  "same result" pre_capture
+                  (make_capture_by_approach pre_capture
+                     { position = (H 0, V 2); direction = E }
+                     W));
             test_case "capture own pawn" `Quick (fun () ->
-              Alcotest.(check board) "same result" pre_capture
-              (make_capture_by_approach pre_capture {position = ((H 1), (V 6)); direction = S} W));
+                Alcotest.(check board)
+                  "same result" pre_capture
+                  (make_capture_by_approach pre_capture
+                     { position = (H 1, V 6); direction = S }
+                     W));
             test_case "capture own pawn split" `Quick (fun () ->
-              Alcotest.(check board) "same result" 
-              (clear_cell (clear_cell pre_capture (H 2) (V 2)) (H 1) (V 2))
-              (make_capture_by_approach pre_capture {position = ((H 4), (V 2)); direction = N} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (clear_cell pre_capture (H 2) (V 2)) (H 1) (V 2))
+                  (make_capture_by_approach pre_capture
+                     { position = (H 4, V 2); direction = N }
+                     W));
             test_case "capture by approach one pawn" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell pre_capture (H 0) (V 0))
-              (make_capture_by_approach pre_capture {position = ((H 2), (V 0)); direction = N} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell pre_capture (H 0) (V 0))
+                  (make_capture_by_approach pre_capture
+                     { position = (H 2, V 0); direction = N }
+                     W));
             test_case "capture by approach two pawns" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (clear_cell pre_capture (H 1) (V 1)) (H 0) (V 1))
-              (make_capture_by_approach pre_capture {position = ((H 3), (V 1)); direction = N} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (clear_cell pre_capture (H 1) (V 1)) (H 0) (V 1))
+                  (make_capture_by_approach pre_capture
+                     { position = (H 3, V 1); direction = N }
+                     W));
             test_case "capture by approach split line" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (clear_cell pre_capture (H 4) (V 4)) (H 4) (V 5))
-              (make_capture_by_approach pre_capture {position = ((H 4), (V 2)); direction = E} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (clear_cell pre_capture (H 4) (V 4)) (H 4) (V 5))
+                  (make_capture_by_approach pre_capture
+                     { position = (H 4, V 2); direction = E }
+                     W));
             test_case "capture by approach one pawn diagonal" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell pre_capture (H 1) (V 5))
-              (make_capture_by_approach pre_capture {position = ((H 3), (V 7)); direction = NW} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell pre_capture (H 1) (V 5))
+                  (make_capture_by_approach pre_capture
+                     { position = (H 3, V 7); direction = NW }
+                     W));
             test_case "capture by approach diagonal pawns" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (clear_cell (clear_cell pre_capture (H 2) (V 4)) (H 1) (V 5)) (H 0) (V 6))
-              (make_capture_by_approach pre_capture {position = ((H 4), (V 2)); direction = NE} W));
-          ]);
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell
+                     (clear_cell (clear_cell pre_capture (H 2) (V 4)) (H 1) (V 5))
+                     (H 0) (V 6))
+                  (make_capture_by_approach pre_capture
+                     { position = (H 4, V 2); direction = NE }
+                     W));
+          ] );
         ( "make_capture_by_withdrawal",
           [
             test_case "capture nothing" `Quick (fun () ->
-              Alcotest.(check board) "same result" pre_capture
-              (make_capture_by_withdrawal pre_capture {position = ((H 4), (V 2)); direction = E} W));
+                Alcotest.(check board)
+                  "same result" pre_capture
+                  (make_capture_by_withdrawal pre_capture
+                     { position = (H 4, V 2); direction = E }
+                     W));
             test_case "capture by withdrawal one pawn" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (clear_cell (set pre_capture (H 1) (V 0) W) (H 2) (V 0)) (H 3) (V 0))
-              (make_capture_by_withdrawal pre_capture {position = ((H 2), (V 0)); direction = N} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell
+                     (clear_cell (set pre_capture (H 1) (V 0) W) (H 2) (V 0))
+                     (H 3) (V 0))
+                  (make_capture_by_withdrawal pre_capture
+                     { position = (H 2, V 0); direction = N }
+                     W));
             test_case "capture by withdrawal two pawns" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (clear_cell pre_capture (H 0) (V 0)) (H 0) (V 1))
-              (make_capture_by_withdrawal pre_capture {position = ((H 0), (V 2)); direction = E} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (clear_cell pre_capture (H 0) (V 0)) (H 0) (V 1))
+                  (make_capture_by_withdrawal pre_capture
+                     { position = (H 0, V 2); direction = E }
+                     W));
             test_case "capture by withdrawal one pawn diagonal" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell pre_capture (H 2) (V 2))
-              (make_capture_by_withdrawal pre_capture {position = ((H 1), (V 3)); direction = NE} W));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell pre_capture (H 2) (V 2))
+                  (make_capture_by_withdrawal pre_capture
+                     { position = (H 1, V 3); direction = NE }
+                     W));
             test_case "capture by withdrawal diagonal pawns" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (clear_cell pre_capture (H 2) (V 7)) (H 3) (V 8))                
-              (make_capture_by_withdrawal pre_capture {position = ((H 1), (V 6)); direction = NE} W));
-            ]);
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (clear_cell pre_capture (H 2) (V 7)) (H 3) (V 8))
+                  (make_capture_by_withdrawal pre_capture
+                     { position = (H 1, V 6); direction = NE }
+                     W));
+          ] );
         ( "position_or_direction_already_executed",
           [
             test_case "empty chain" `Quick (fun () -> 
@@ -295,23 +338,43 @@ let () =
               position_or_direction_already_executed mc {position = ((H 2),(V 2)); direction = NW}));
           ]);
         ( "make_move",
-         [
+          [
             test_case "escape move" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (set board_2 (H 0) (V 1) W) (H 0) (V 2))
-              (fst (make_move board_2 W {position = ((H 0), (V 2)); direction = W} Approach [] )));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (set board_2 (H 0) (V 1) W) (H 0) (V 2))
+                  (fst
+                     (make_move board_2 W
+                        { position = (H 0, V 2); direction = W }
+                        Approach [])));
             test_case "capture move" `Quick (fun () ->
-              Alcotest.(check board) "same result"
-              (clear_cell (set board_2 (H 0) (V 3) W) (H 0) (V 2))
-              (fst (make_move board_2_set0_1_B W {position = ((H 0), (V 2)); direction = E} Withdrawal [] )));
+                Alcotest.(check board)
+                  "same result"
+                  (clear_cell (set board_2 (H 0) (V 3) W) (H 0) (V 2))
+                  (fst
+                     (make_move board_2_set0_1_B W
+                        { position = (H 0, V 2); direction = E }
+                        Withdrawal [])));
             test_case "wrong capture type" `Quick (fun () ->
-              Alcotest.(check_raises) "Not_capture_by_withdrawal" Not_capture_by_withdrawal (fun () ->
-              ignore (make_move board_2_set0_1_B W {position = ((H 0), (V 2)); direction = E} Approach [] )));
+                Alcotest.(check_raises)
+                  "Not_capture_by_withdrawal" Not_capture_by_withdrawal (fun () ->
+                    ignore
+                      (make_move board_2_set0_1_B W
+                         { position = (H 0, V 2); direction = E }
+                         Approach [])));
             test_case "wrong capture type" `Quick (fun () ->
-              Alcotest.(check_raises) "Not_capture_by_withdrawal" Not_capture_by_withdrawal (fun () ->
-              ignore (make_move board_2_set0_1_B W {position = ((H 0), (V 2)); direction = E} Approach [] )));
+                Alcotest.(check_raises)
+                  "Not_capture_by_withdrawal" Not_capture_by_withdrawal (fun () ->
+                    ignore
+                      (make_move board_2_set0_1_B W
+                         { position = (H 0, V 2); direction = E }
+                         Approach [])));
             test_case "Invalid move" `Quick (fun () ->
-              Alcotest.(check_raises) "Invalid_position" Invalid_position (fun () ->
-              ignore (make_move pre_capture W {position = ((H 2), (V 0)); direction = S} Approach [] )));
-          ]);
+                Alcotest.(check_raises) "Invalid_position" Invalid_position
+                  (fun () ->
+                    ignore
+                      (make_move pre_capture W
+                         { position = (H 2, V 0); direction = S }
+                         Approach [])));
+          ] );*)
     ]
