@@ -315,6 +315,20 @@ let position_or_direction_or_line_already_executed move_chain move =
   in
   same_position || same_direction || same_line
 
+let can_continue board player move move_chain =
+  [ N; S; E; W; NE; SW; NW; SE ]
+  |> List.filter (fun dir ->
+         match destination_pos move with
+         | None -> false
+         | Some p ->
+             let move' = { position = p; direction = dir } in
+             is_valid_move_position board move' player
+             && is_capture_move board move' player
+             && not
+                  (position_or_direction_or_line_already_executed move_chain
+                     move'))
+  |> List.is_empty |> not
+
 let make_move board player move capture move_chain =
   if not (is_valid_move_position board move player) then raise Invalid_position
   else
