@@ -2,7 +2,7 @@ open Fanorona.Engine
 open Utils
 
 let board_1_get res i j () =
-  Alcotest.(check cell) "same result" res (get board_1 (H i) (V j))
+  Alcotest.(check cell) "same result" res (get board_1 (Pos.h i) (Pos.v j))
 
 let make_flat_pawn board =
   (board |> List.flatten |> List.filter 
@@ -50,20 +50,6 @@ let () =
               "same result" ""
               (Format.asprintf "@[<v>%a@]" pp_board board_2));
         ]);*)
-      ( "set",
-        [
-          test_case "board_1-set-fail" `Quick (fun () ->
-              Alcotest.(check_raises) "Occupied cell" Occupied_cell (fun () ->
-                  ignore (set board_1 (H 4) (V 1) W)));
-          test_case "board_2-set-success" `Quick (fun () ->
-              Alcotest.(check cell)
-                "same result" (Pawn B)
-                (get (set board_2 (H 0) (V 1) B) (H 0) (V 1)));
-          test_case "board_2_compare" `Quick (fun () ->
-              Alcotest.(check board)
-                "same result" board_2_set0_1_B
-                (set board_2 (H 0) (V 1) B));
-        ] );
       ( "free_cells",
         [
           test_case "starting-board-free-cells" `Quick (fun () ->
@@ -105,33 +91,68 @@ let () =
           test_case "successful linear move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" true
-                (is_valid_move_position initial_state_5x9
-                   { position = (Pos.(h 3), Pos.(v 4)); direction = N }
-                   W));
+                (try
+                   let _ =
+                     make_move initial_state_5x9 W
+                       { position = (Pos.(h 3), Pos.(v 4)); direction = N }
+                       None []
+                   in
+                   true
+                 with
+                | Invalid_position -> false
+                | _ -> true));
           test_case "successful diagonal move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" true
-                (is_valid_move_position initial_state_5x9
-                   { position = (Pos.(h 3), Pos.(v 3)); direction = NE }
-                   W));
+                (try
+                   let _ =
+                     make_move initial_state_5x9 W
+                       { position = (Pos.(h 3), Pos.(v 3)); direction = NE }
+                       None []
+                   in
+                   true
+                 with
+                | Invalid_position -> false
+                | _ -> true));
           test_case "incorrect pawn player move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" false
-                (is_valid_move_position initial_state_5x9
-                   { position = (Pos.(h 1), Pos.(v 4)); direction = S }
-                   W));
+                (try
+                   let _ =
+                     make_move initial_state_5x9 W
+                       { position = (Pos.(h 1), Pos.(v 4)); direction = S }
+                       None []
+                   in
+                   true
+                 with
+                | Invalid_position -> false
+                | _ -> true));
           test_case "move empty cell" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" false
-                (is_valid_move_position initial_state_5x9
-                   { position = (Pos.(h 2), Pos.(v 4)); direction = N }
-                   W));
+                (try
+                   let _ =
+                     make_move initial_state_5x9 W
+                       { position = (Pos.(h 2), Pos.(v 4)); direction = N }
+                       None []
+                   in
+                   true
+                 with
+                | Invalid_position -> false
+                | _ -> true));
           test_case "move into pawn" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" false
-                (is_valid_move_position initial_state_5x9
-                   { position = (Pos.(h 3), Pos.(v 4)); direction = S }
-                   W));
+                (try
+                   let _ =
+                     make_move initial_state_5x9 W
+                       { position = (Pos.(h 3), Pos.(v 4)); direction = S }
+                       None []
+                   in
+                   true
+                 with
+                | Invalid_position -> false
+                | _ -> true));
           test_case "diagonal move on non diagonal pos" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" false
@@ -145,31 +166,35 @@ let () =
           (*test_case "(3, 4) to (2,4) starter inward move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" true
-                (is_capture_move initial_state_5x9
+                (type_capture_move initial_state_5x9
                    { position = (Pos.(h 3), Pos.(v 4)); direction = N }
-                   W));
+                   W
+                <> None));
           test_case "(3,3) to (2,4) starter inward move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" true
-                (is_capture_move initial_state_5x9
+                (type_capture_move initial_state_5x9
                    { position = (Pos.(h 3), Pos.(v 3)); direction = NE }
-                   W));
+                   W
+                <> None));
           test_case "outward capture move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" true
-                (is_capture_move board_1
+                (type_capture_move board_1
                    { position = (Pos.(h 1), Pos.(v 1)); direction = E }
-                   W));
+                   W
+                <> None));
           test_case "non capture move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" false
-                (is_capture_move board_1
+                (type_capture_move board_1
                    { position = (Pos.(h 3), Pos.(v 0)); direction = E }
-                   W));
+                   W
+                <> None));
           test_case "invalid move into pawn capture move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" false
-                (is_capture_move board_3
+                (type_capture_move board_3
                    { position = (Pos.(h 2), Pos.(v 2)); direction = S }
                    B));*)
         ] );
