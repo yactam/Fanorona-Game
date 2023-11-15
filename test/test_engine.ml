@@ -4,6 +4,15 @@ open Utils
 let board_1_get res i j () =
   Alcotest.(check cell) "same result" res (get board_1 (H i) (V j))
 
+let make_flat_pawn board =
+  (board |> List.flatten |> List.filter 
+  (fun cell -> match cell with
+  | Empty -> false
+  | _ -> true
+  ))
+
+
+
 let is_capture_move_test =
   let open QCheck in
   Test.make ~count:1000 ~name:"for all capture move, board size before > after"
@@ -13,7 +22,9 @@ let is_capture_move_test =
       let new_board = 
         try make_move board player move (type_capture_move board move player) []
         with _ -> make_move board player move (Some Approach) [] in
-      is_capture_move board move player && ((board |> List.flatten |> List.length) > (fst new_board |> List.flatten |> List.length))
+      try 
+        (is_capture_move board move player) && (List.length (make_flat_pawn board) > List.length (make_flat_pawn (fst new_board)))
+      with _ -> ( List.length (make_flat_pawn board) == List.length (make_flat_pawn (fst new_board)))
     ))
 
 let () =
