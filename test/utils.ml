@@ -61,3 +61,27 @@ let pre_capture =
       [ Pawn B; Pawn W; Empty; Empty; Empty; Empty; Pawn W; Pawn W; Pawn B ];
       [ Empty; Empty; Pawn W; Empty; Pawn B; Pawn B; Empty; Pawn B; Empty ];
     ]
+
+let generate_dir = 
+  let open QCheck in
+  Gen.oneof (
+    [N; S; E; W; NE; SE; NW; SW] 
+    |> List.map (fun e -> Gen.return e)
+  )
+
+let dir_arbitrary = QCheck.make generate_dir
+
+let generate_player =
+  let open QCheck in
+  Gen.oneof [Gen.return B; Gen.return (W : player)]
+
+let player_arbitrary = QCheck.make generate_player
+
+let generate_board_rand =
+  let gen_line = List.init 9 (fun _ -> 
+    match (Random.int 3) with
+    | 0 -> Empty
+    | 1 -> Pawn W
+    | _ -> Pawn B)
+  in List.init 5 (fun _ -> gen_line)
+

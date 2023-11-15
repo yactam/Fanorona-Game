@@ -4,6 +4,18 @@ open Utils
 let board_1_get res i j () =
   Alcotest.(check cell) "same result" res (get board_1 (H i) (V j))
 
+let is_capture_move_test =
+  let open QCheck in
+  Test.make ~count:1000 ~name:"for all capture move, board size before > after"
+  (pair dir_arbitrary player_arbitrary) (fun (dir, player) -> 
+    ( let move = {position = ((H (Random.int 5)), (V (Random.int 9))); direction = dir} in
+      let board =  generate_board_rand in 
+      let new_board = 
+        try make_move board player move (type_capture_move board move player) []
+        with _ -> make_move board player move (Some Approach) [] in
+      is_capture_move board move player && ((board |> List.flatten |> List.length) > (fst new_board |> List.flatten |> List.length))
+    ))
+
 let () =
   let open Alcotest in
   run "Engine"
@@ -115,10 +127,11 @@ let () =
                 (is_valid_move_position board_1
                    { position = (Pos.(h 1), Pos.(v 0)); direction = SE }
                    B));
+          
         ] );
       ( "is_capture_move",
-        [
-          test_case "(3, 4) to (2,4) starter inward move" `Quick (fun () ->
+        [ QCheck_alcotest.to_alcotest is_capture_move_test
+          (*test_case "(3, 4) to (2,4) starter inward move" `Quick (fun () ->
               Alcotest.(check bool)
                 "same result" true
                 (is_capture_move initial_state_5x9
@@ -147,7 +160,7 @@ let () =
                 "same result" false
                 (is_capture_move board_3
                    { position = (Pos.(h 2), Pos.(v 2)); direction = S }
-                   B));
+                   B));*)
         ] );
       ( "get_all_moves",
         [
