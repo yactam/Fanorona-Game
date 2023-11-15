@@ -125,3 +125,22 @@ let player_teletype player board =
   | Some Both ->
       Lwt.return (Some (Some move, player_teletype_get_capture_type ()))
 
+let player_random player board =
+  let all_moves = get_all_moves board player in
+  let capture_moves =
+    List.filter (fun m -> type_capture_move board m player <> None) all_moves
+  in
+  let random_element lst =
+    let len = List.length lst in
+    if len = 0 then None else Some (List.nth lst (Random.int len))
+  in
+  let move_option =
+    let len = List.length capture_moves in
+    if len = 0 then random_element all_moves else random_element capture_moves
+  in
+  let type_capture_option =
+    match move_option with
+    | None -> None
+    | Some m -> type_capture_move board m player
+  in
+  Lwt.return (Some (move_option, type_capture_option))
