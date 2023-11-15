@@ -214,7 +214,7 @@ let get_all_moves board player =
          |> List.map (fun dir -> { position = pos; direction = dir }))
   |> List.flatten
 
-type capture = Approach | Withdrawal | Both
+type capture = Approach | Withdrawal | Both [@@deriving show, eq]
 
 (** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
 let type_capture_move board move player =
@@ -280,15 +280,40 @@ exception Not_capture_by_withdrawal
 exception Choice_required
 exception Capture_move_restrictions_broken
 
-let position_or_direction_already_executed move_chain move =
-  List.exists
-    (fun m ->
-      m.position = move.position
-      ||
-      match destination_pos move with None -> false | Some p -> m.position = p)
-    move_chain
-  || List.length move_chain <> 0
-     && (List.hd move_chain).direction = move.direction
+let position_or_direction_or_line_already_executed move_chain move =
+  let same_position =
+    match destination_pos move with
+    | None -> false
+    | Some p -> List.exists (fun m -> m.position = p) move_chain
+  in
+  let same_direction =
+    List.length move_chain <> 0
+    && (List.hd move_chain).direction = move.direction
+  in
+  let same_line =
+    let line_between_positions (H i, V j) (H i', V j') =
+      if i = i' then
+        List.init (abs (j - j') + 1) (fun k -> (H i, V (min j (j' + k))))
+      else if j = j' then
+        List.init (abs (i - i') + 1) (fun k -> (H (min i (i' + k)), V j))
+      else if abs (i - i') = abs (j - j') then
+        List.init
+          (abs (i - i') + 1)
+          (fun k -> (H (min i (i' + k)), V (min j (j' + k))))
+      else []
+    in
+    match destination_pos move with
+    | Some p ->
+        let line = line_between_positions move.position p in
+        List.exists
+          (fun m ->
+            match destination_pos m with
+            | None -> false
+            | Some p' -> line_between_positions m.position p' = line)
+          move_chain
+    | _ -> false
+  in
+  same_position || same_direction || same_line
 
 let make_move board player move capture move_chain =
   if not (is_valid_move_position board move player) then raise Invalid_position
@@ -311,14 +336,23 @@ let make_move board player move capture move_chain =
               (set2 board_aux p' player, move :: move_chain))
     | Some Approach ->
         if capture = Some Approach then
-          if position_or_direction_already_executed move_chain move then
+          if position_or_direction_or_line_already_executed move_chain move then
             raise Capture_move_restrictions_broken
           else (make_capture_by_approach board move player, move :: move_chain)
         else raise Not_capture_by_approach
     | Some Withdrawal ->
         if capture = Some Withdrawal then
-          if position_or_direction_already_executed move_chain move then
+          if position_or_direction_or_line_already_executed move_chain move then
             raise Capture_move_restrictions_broken
           else (make_capture_by_withdrawal board move player, move :: move_chain)
         else raise Not_capture_by_withdrawal
-    | Some Both -> raise Choice_required
+    | Some Both ->
+        if capture = Some Approach then
+          if position_or_direction_or_line_already_executed move_chain move then
+            raise Capture_move_restrictions_broken
+          else (make_capture_by_approach board move player, move :: move_chain)
+        else if capture = Some Withdrawal then
+          if position_or_direction_or_line_already_executed move_chain move then
+            raise Capture_move_restrictions_broken
+          else (make_capture_by_withdrawal board move player, move :: move_chain)
+        else raise Choice_required
