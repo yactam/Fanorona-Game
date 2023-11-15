@@ -1,16 +1,13 @@
 type player = W | B
 
 val pp_player : Format.formatter -> player -> unit
-val show_player : player -> string
 val equal_player : player -> player -> bool
 val opponent : player -> player
 
-type hpos = H of int
+type hpos
+type vpos
 
 val equal_hpos : hpos -> hpos -> bool
-
-type vpos = V of int
-
 val equal_vpos : vpos -> vpos -> bool
 
 exception Invalid_horizontal_pos
@@ -38,58 +35,38 @@ val pp_pos : Format.formatter -> hpos * vpos -> unit
 type dir = N | S | E | W | NE | SW | NW | SE
 
 val pp_dir : Format.formatter -> dir -> unit
-val show_dir : dir -> string
 val equal_dir : dir -> dir -> bool
-val get_vect : dir -> int * int
-val rev_dir : dir -> dir
 
 type move = { position : pos; direction : dir }
 
 val equal_move : move -> move -> bool
 val pp_move : Format.formatter -> move -> unit
-val destination_pos : move -> (hpos * vpos) option
-val get_destination_pos : move -> hpos * vpos
 
 type cell = Empty | Pawn of player
 
+val pp_cell : Format.formatter -> cell -> unit
 val equal_cell : cell -> cell -> bool
 
 type board = cell list list
 
 val equal_board : board -> board -> bool
-val init : 'a list list -> 'a list list
-val initial_state_5x9 : cell list list
-val get : 'a list list -> hpos -> vpos -> 'a
-val get2 : 'a list list -> hpos * vpos -> 'a
-val pp_cell : Format.formatter -> cell -> unit
-val pp_board : Format.formatter -> cell list list -> unit
-val mapi : (hpos -> vpos -> 'a -> 'b) -> 'a list list -> 'b list list
-val iteri : (hpos -> vpos -> 'a -> unit) -> 'a list list -> unit
+val init : board -> board
+val initial_state_5x9 : board
+val pp_board : Format.formatter -> board -> unit
+val get : board -> hpos -> vpos -> cell
+val iteri : (hpos -> vpos -> cell -> unit) -> board -> unit
 
 exception Occupied_cell
 
-val set : cell list list -> hpos -> vpos -> player -> cell list list
-val set2 : cell list list -> hpos * vpos -> player -> cell list list
-val clear_cell : cell list list -> hpos -> vpos -> cell list list
-val clear_cell2 : cell list list -> hpos * vpos -> cell list list
-val free_cells : cell list list -> (hpos * vpos) list
-val win : cell list list -> player -> bool
-val is_diagonal_move : move -> bool
-val is_valid_diagonal_move : move -> bool
-val is_valid_move_position : cell list list -> move -> player -> bool
-val get_all_moves : cell list list -> player -> move list
+val free_cells : board -> (hpos * vpos) list
+val win : board -> player -> bool
+val get_all_moves : board -> player -> move list
 
 type capture = Approach | Withdrawal | Both
 
-val type_capture_move : cell list list -> move -> player -> capture option
-val is_capture_move : cell list list -> move -> player -> bool
-val aux_capture : cell list list -> pos -> dir -> player -> cell list list
-
-val make_capture_by_approach :
-  cell list list -> move -> player -> cell list list
-
-val make_capture_by_withdrawal :
-  cell list list -> move -> player -> cell list list
+val pp_capture : Format.formatter -> capture -> unit
+val equal_capture : capture -> capture -> bool
+val type_capture_move : board -> move -> player -> capture option
 
 exception Compulsory_capture
 exception Not_capture_by_approach
@@ -97,12 +74,9 @@ exception Not_capture_by_withdrawal
 exception Choice_required
 exception Capture_move_restrictions_broken
 
-val position_or_direction_already_executed : move list -> move -> bool
+val position_or_direction_or_line_already_executed : move list -> move -> bool
+val can_continue : board -> player -> move -> move list -> bool
+val is_last_pawn_position_move : move -> move list -> bool
 
 val make_move :
-  cell list list ->
-  player ->
-  move ->
-  capture option ->
-  move list ->
-  cell list list * move list
+  board -> player -> move -> capture option -> move list -> board * move list
