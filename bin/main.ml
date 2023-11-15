@@ -1,7 +1,11 @@
-open Fanorona.Engine
-
-let () = print_endline "Hello, World!"
+open Fanorona.Arena
 
 let () =
-  let board = init initial_state_5x9 in
-  pp_board Format.std_formatter board
+  Format.open_vbox 0;
+  let result =
+    Lwt_main.run (arena (pair ~w:(player_teletype W) ~b:(player_teletype B)))
+  in
+  Format.printf "Game ends with %a@," pp_endplay result.endgame;
+  Format.printf "Trace: @[<v>%a@]" pp_trace result.trace;
+  Format.close_box ();
+  Format.printf "@."
