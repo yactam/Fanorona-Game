@@ -315,6 +315,12 @@ let position_or_direction_or_line_already_executed move_chain move =
   in
   same_position || same_direction || same_line
 
+let is_last_pawn_position_move move move_chain =
+  try
+    let last_move = List.hd move_chain in
+    move.position = get_destination_pos last_move
+  with _ -> false
+
 let can_continue board player move move_chain =
   [ N; S; E; W; NE; SW; NW; SE ]
   |> List.filter (fun dir ->
