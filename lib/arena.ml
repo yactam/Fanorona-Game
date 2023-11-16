@@ -117,7 +117,7 @@ let rec player_teletype player board move_chain =
   let move = { position = pos; direction = dir } in
   let type_capture = type_capture_move board move player in
   if
-    (not (List.is_empty move_chain))
+    (not(List.is_empty move_chain))
     && not (is_last_pawn_position_move move move_chain)
   then (
     Format.printf "You must continue with the same pawn.@,";
@@ -135,7 +135,8 @@ let player_random player board move_chain =
     List.filter
       (fun m ->
         type_capture_move board m player <> None
-        && (List.is_empty move_chain || is_last_pawn_position_move m move_chain))
+        && (List.is_empty move_chain
+           || is_last_pawn_position_move m move_chain))
       all_moves
   in
   let random_element lst =

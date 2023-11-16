@@ -108,9 +108,9 @@ let pp_board out_c board =
   let print_row out_c row =
     List.init nb_cols Fun.id
     |> List.iter (fun j ->
-           if (row + j) mod 2 = 0 then (
-             Format.fprintf out_c "| @[<b>%a@] " pp_cell
-               (get board (H row) (V j)))
+           if (row + j) mod 2 = 0 then
+             Format.fprintf out_c "| \x1B[1m%a\x1B[0m " pp_cell
+               (get board (H row) (V j))
            else Format.fprintf out_c "| %a " pp_cell (get board (H row) (V j)))
   in
   Format.fprintf out_c "%s+" row_sep;
@@ -163,7 +163,7 @@ let win board player =
          | Empty -> false
          | Pawn p when p = player -> false
          | _ -> true)
-  |> List.length = 0
+  |> List.is_empty
 
 let is_diagonal_move move =
   let dir = move.direction in
@@ -269,7 +269,7 @@ let position_or_direction_or_line_already_executed move_chain move =
     | Some p -> List.exists (fun m -> m.position = p) move_chain
   in
   let same_direction =
-    List.length move_chain <> 0
+    (not (List.is_empty move_chain))
     && (List.hd move_chain).direction = move.direction
   in
   let same_line =
@@ -315,7 +315,7 @@ let can_continue board player move move_chain =
              && not
                   (position_or_direction_or_line_already_executed move_chain
                      move'))
-  |> List.length > 0
+  |> List.is_empty |> not
 
 let make_move board player move capture move_chain =
   if not (is_valid_move_position board move player) then raise Invalid_position
@@ -328,7 +328,7 @@ let make_move board player move capture move_chain =
         in
         if
           (not (is_capture_move board move player))
-          && List.length capture_moves > 0
+          && not (List.is_empty capture_moves)
         then raise Compulsory_capture
         else
           match destination_pos move with

@@ -17,6 +17,9 @@ depends: [
   "alcotest" {with-test}
   "qcheck"
   "qcheck-alcotest"
+  "lwt"
+  "js_of_ocaml"
+  "js_of_ocaml-lwt"
   "odoc" {with-doc}
 ]
 build: [

@@ -39,17 +39,6 @@ let () =
           test_case "board_1-get-2-1" `Quick (board_1_get Empty 2 1);
           test_case "board_1-get-4-4" `Quick (board_1_get Empty 4 4);
         ] );
-      (*( "pp",
-        [
-          test_case "board_1-pp" `Quick (fun () ->
-            Alcotest.(check string)
-              "same result" ""
-              (Format.asprintf "@[<h>%a@]" pp_board board_1));
-          test_case "board_2-pp" `Quick (fun () ->
-            Alcotest.(check string)
-              "same result" ""
-              (Format.asprintf "@[<v>%a@]" pp_board board_2));
-        ]);*)
       ( "free_cells",
         [
           test_case "starting-board-free-cells" `Quick (fun () ->
