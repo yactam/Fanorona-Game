@@ -108,9 +108,9 @@ let pp_board out_c board =
   let print_row out_c row =
     List.init nb_cols Fun.id
     |> List.iter (fun j ->
-           if (row + j) mod 2 = 0 then
-             Format.fprintf out_c "| \x1B[1m%a\x1B[0m " pp_cell
-               (get board (H row) (V j))
+           if (row + j) mod 2 = 0 then (
+             Format.fprintf out_c "| @[<b>%a@] " pp_cell
+               (get board (H row) (V j)))
            else Format.fprintf out_c "| %a " pp_cell (get board (H row) (V j)))
   in
   Format.fprintf out_c "%s+" row_sep;

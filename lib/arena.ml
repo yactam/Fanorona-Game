@@ -62,16 +62,14 @@ let pair ~w:player_W ~b:player_B player =
 let rec player_teletype_get_int () =
   try int_of_string (read_line ())
   with Failure _ ->
-    Format.printf "Not a valid number please again: %!";
+    Format.printf "Not a valid number please again: @?";
     player_teletype_get_int ()
 
 let rec player_teletype_get_pos () =
   try
-    Format.printf "Enter row number: ";
-    Format.printf "%!";
+    Format.printf "Enter row number: @?";
     let row = player_teletype_get_int () in
-    Format.printf "Enter column number: ";
-    Format.printf "%!";
+    Format.printf "Enter column number: @?";
     let col = player_teletype_get_int () in
     (Pos.h row, Pos.v col)
   with Failure _ -> player_teletype_get_pos ()
@@ -90,8 +88,7 @@ let parse_direction dir_str =
 
 let rec player_teletype_get_dir () =
   try
-    Format.printf "Enter direction (N, S, E, W, NE, SW, NW, SE): ";
-    Format.printf "%!";
+    Format.printf "Enter direction (N, S, E, W, NE, SW, NW, SE): @?";
     let dir_str = read_line () in
     parse_direction dir_str
   with _ -> player_teletype_get_dir ()
@@ -112,7 +109,7 @@ let rec player_teletype_get_capture_type () =
 
 let rec player_teletype player board move_chain =
   Format.printf "@[<v>Player %a to play.@," pp_player player;
-  Format.printf "Board: @[<v>%a@]@." pp_board board;
+  Format.printf "Board: @[<v>%a@]@]@," pp_board board;
   Format.printf "Select a position: ";
   let pos = player_teletype_get_pos () in
   Format.printf "Select a direction: ";
