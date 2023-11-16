@@ -1,4 +1,3 @@
-(** A player is either the white [W] player or the black player [B] *)
 type player = W | B [@@deriving show { with_path = false }, eq]
 
 let opponent = function W -> B | B -> W
@@ -29,10 +28,7 @@ module Pos = struct
     V j
 end
 
-(** extract the line number from a valid [hpos] *)
 let get_line (H i) = i
-
-(** extract the column number from a valid [vpos] *)
 let get_col (V j) = j
 
 (* Make sure pretty-printed notation can be parsed back by OCaml *)
@@ -43,13 +39,11 @@ let pp_vpos out_channel = function
   | V j -> Format.fprintf out_channel "Pos.(v %d)" j
 
 type pos = hpos * vpos [@@deriving eq]
-(** A pair of coordinates that combines an [hpos] and a [vpos] to represents positions on the board *)
 
 let pp_pos out_channel pos =
   let hp, vp = pos in
   Format.fprintf out_channel "(%a, %a)" pp_hpos hp pp_vpos vp
 
-(** A direction is one of: North [N], South [S], East [E], West [W], North-East [NE], South-West [SW], North-West [NW], South-East [SE]. *)
 type dir = N | S | E | W | NE | SW | NW | SE
 [@@deriving show { with_path = false }, eq]
 
@@ -74,7 +68,6 @@ let rev_dir = function
   | SE -> NW
 
 type move = { position : pos; direction : dir } [@@deriving eq]
-(** A move is represented by a starting position and a direction *)
 
 let pp_move out_c move =
   Format.fprintf out_c "{%a; %s}" pp_pos move.position (show_dir move.direction)
@@ -86,19 +79,14 @@ let destination_pos move =
 let get_destination_pos move =
   match destination_pos move with None -> raise Invalid_position | Some p -> p
 
-(** A cell in the board is either [Empty] or containing a [Pawn] of [Player] player  *)
 type cell = Empty | Pawn of player [@@deriving eq]
-
 type board = cell list list [@@deriving eq]
-(** The game board is represented by a list of list of [cell]s *)
 
-(** Check wether [model] is a valid game board *)
 let init model =
   assert (List.length model = nb_rows);
   assert (List.for_all (fun row -> List.length row = nb_cols) model);
   model
 
-(** The initial state of a classic fanorana game board *)
 let initial_state_5x9 =
   let row p = List.init nb_cols (fun _ -> Pawn p) in
   let black_row = row B and white_row = row W in
@@ -107,9 +95,7 @@ let initial_state_5x9 =
   in
   [ black_row; black_row; mid_row; white_row; white_row ]
 
-(** Get from the board the [cell] at position([i], [j]) *)
 let get board (H i) (V j) = List.nth (List.nth board i) j
-
 let get2 board (H i, V j) = get board (H i) (V j)
 (* currified version of get *)
 
@@ -164,14 +150,12 @@ let clear_cell board i j =
 
 let clear_cell2 board (H i, V j) = clear_cell board (H i) (V j)
 
-(** Return a [(hpos * vpos) list] of free cells in the board [board] *)
 let free_cells board =
   List.init (nb_rows * nb_cols) (fun i ->
       (Pos.h (i / nb_cols), Pos.v (i mod nb_cols)))
   |> List.filter (fun (i, j) ->
          match get board i j with Empty -> true | _ -> false)
 
-(** Check wether the player [player] has won according to [board] *)
 let win board player =
   List.flatten board
   |> List.filter (fun cell ->
@@ -199,7 +183,6 @@ let is_valid_move_position board move player =
       cell = Pawn player && target = Empty
       && ((not (is_diagonal_move move)) || is_valid_diagonal_move move)
 
-(** get a list of all possible moves of player [player] on board [board] but not some of them may be illegal in a specific game *)
 let get_all_moves board player =
   let all_positions =
     List.init nb_rows (fun i -> List.init nb_cols (fun j -> (Pos.h i, Pos.v j)))
@@ -216,7 +199,6 @@ let get_all_moves board player =
 
 type capture = Approach | Withdrawal | Both [@@deriving show, eq]
 
-(** check whether the move [move] executed by the player [player] on the board [board] is a capture move *)
 let type_capture_move board move player =
   if not (is_valid_move_position board move player) then None
   else
