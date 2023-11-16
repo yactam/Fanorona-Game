@@ -4,8 +4,8 @@ val pp_player : Format.formatter -> player -> unit
 val equal_player : player -> player -> bool
 val opponent : player -> player
 
-type hpos
-type vpos
+type hpos = H of int
+type vpos = V of int
 
 val equal_hpos : hpos -> hpos -> bool
 val equal_vpos : vpos -> vpos -> bool

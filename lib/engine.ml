@@ -333,7 +333,7 @@ let can_continue board player move move_chain =
              && not
                   (position_or_direction_or_line_already_executed move_chain
                      move'))
-  |> List.is_empty |> not
+  |> List.length > 0
 
 let make_move board player move capture move_chain =
   if not (is_valid_move_position board move player) then raise Invalid_position

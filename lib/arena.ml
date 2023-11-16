@@ -28,7 +28,7 @@ let arena ?(init_player : player = W) ?(init_board = Engine.initial_state_5x9)
       | Some (Some move, capture_option) -> (
           let is_capture = capture_option <> None in
           if
-            (not (List.is_empty move_chain))
+            ((List.length move_chain) > 0)
             && not (is_last_pawn_position_move move move_chain)
           then go board player trace move_chain
           else

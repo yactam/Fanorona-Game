@@ -1,4 +1,5 @@
 open Fanorona.Engine
+open QCheck
 
 let player =
   Alcotest.testable
@@ -62,26 +63,46 @@ let pre_capture =
       [ Empty; Empty; Pawn W; Empty; Pawn B; Pawn B; Empty; Pawn B; Empty ];
     ]
 
-let generate_dir = 
-  let open QCheck in
-  Gen.oneof (
-    [N; S; E; W; NE; SE; NW; SW] 
-    |> List.map (fun e -> Gen.return e)
-  )
+let generate_pos ?(h = Gen.int_bound 4) ?(v =Gen.int_bound 8) =
+    let h_pos = h |> Gen.map Pos.h in
+    let v_pos = v |> Gen.map Pos.v in
+    Gen.map2 (fun hp vp -> (hp, vp)) h_pos v_pos
 
-let dir_arbitrary = QCheck.make generate_dir
+let generate_move =
+  Gen.map2 (fun pos dir -> {position = pos; direction = dir}) generate_pos  (Gen.oneofl [N; NE; E; SE; S; SW; W; NW])
+
+let generate_move2 {position = ((H i), (V j)); direction = dir} =
+  Gen.map2 (fun pos dir -> {position = pos; direction = dir}) (generate_pos ~h:(Gen.return i) ~v:(Gen.return j))  (Gen.return dir)
+
+let move_arbitrary = QCheck.make generate_move
 
 let generate_player =
-  let open QCheck in
   Gen.oneof [Gen.return B; Gen.return (W : player)]
 
-let player_arbitrary = QCheck.make generate_player
+let player_arbitrary = make generate_player
 
-let generate_board_rand =
-  let gen_line = List.init 9 (fun _ -> 
-    match (Random.int 3) with
-    | 0 -> Empty
-    | 1 -> Pawn W
-    | _ -> Pawn B)
-  in List.init 5 (fun _ -> gen_line)
+let generate_cell ?(cell = Gen.oneof [Gen.return Empty; Gen.map (fun p -> Pawn p) generate_player]) =
+  cell
 
+let generate_board =
+  let height = Gen.return 5 in
+  let width = Gen.return 9 in
+  Gen.list_size height (Gen.list_size width generate_cell)
+
+let board_arbitrary = make generate_board
+
+let generate_init_state : cell list list Gen.t =
+  let nb_cols = (Gen.return 9) in
+  let row_gen p = Gen.list_size nb_cols (Gen.return (Pawn p)) in
+  let black_row_gen = row_gen B in
+  let white_row_gen = row_gen W in
+  let mid_row_gen =
+    List.init 9 (fun i -> 
+      if i = 4 then Gen.return Empty 
+      else if i mod 2 = 0 && i < 4 || i > 4 && i mod 2 = 1 then Gen.return (Pawn B)
+      else Gen.return (Pawn W))  
+    |> Gen.flatten_l
+  in
+  Gen.flatten_l [black_row_gen; black_row_gen; mid_row_gen; white_row_gen; white_row_gen]
+
+  let init_board_arbitrary = make generate_init_state
