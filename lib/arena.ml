@@ -27,21 +27,16 @@ let arena ?(init_player : player = W) ?(init_board = Engine.initial_state_5x9)
             { trace = List.rev trace; endgame = Giveup player; final = board }
       | Some (Some move, capture_option) -> (
           let is_capture = capture_option <> None in
-          if
-            ((List.length move_chain) > 0)
-            && not (is_last_pawn_position_move move move_chain)
-          then go board player trace move_chain
-          else
-            try
-              let board', move_chain' =
-                make_move board player move capture_option move_chain
-              in
-              if is_capture && can_continue board' player move move_chain' then
-                go board' player (move :: trace) move_chain'
-              else go board' opponent (move :: trace) []
-            with e ->
-              Format.printf "%s@," (Printexc.to_string e);
-              go board player trace move_chain)
+          try
+            let board', move_chain' =
+              make_move board player move capture_option move_chain
+            in
+            if is_capture && can_continue board' player move move_chain' then
+              go board' player (move :: trace) move_chain'
+            else go board' opponent (move :: trace) []
+          with e ->
+            Format.printf "%s@." (Printexc.to_string e);
+            go board player trace move_chain)
   in
   go init_board init_player [] []
 
@@ -117,7 +112,7 @@ let rec player_teletype player board move_chain =
   let move = { position = pos; direction = dir } in
   let type_capture = type_capture_move board move player in
   if
-    (not(List.is_empty move_chain))
+    (not (List.is_empty move_chain))
     && not (is_last_pawn_position_move move move_chain)
   then (
     Format.printf "You must continue with the same pawn.@,";
@@ -135,8 +130,7 @@ let player_random player board move_chain =
     List.filter
       (fun m ->
         type_capture_move board m player <> None
-        && (List.is_empty move_chain
-           || is_last_pawn_position_move m move_chain))
+        && (List.is_empty move_chain || is_last_pawn_position_move m move_chain))
       all_moves
   in
   let random_element lst =

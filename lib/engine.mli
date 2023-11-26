@@ -6,8 +6,10 @@ val equal_player : player -> player -> bool
 val opponent : player -> player
 (** Get the opponent of a [player] *)
 
-type hpos = H of int
-type vpos = V of int
+type hpos
+(** Horizontal position (row number) *)
+type vpos
+(** Vertical position (column number) *)
 
 val equal_hpos : hpos -> hpos -> bool
 val equal_vpos : vpos -> vpos -> bool
