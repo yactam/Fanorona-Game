@@ -1173,4 +1173,169 @@ let () =
                        { position = (Pos.h 2, Pos.v 0); direction = S }
                        (Some Approach) [])));
         ] );
+      ( "test albin",
+        [
+          test_case "Winner" `Quick (fun () ->
+              Alcotest.(check bool)
+                "same result" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 win board W && not (win board B)));
+          test_case "Empty board" `Quick (fun () ->
+              Alcotest.(check bool)
+                "same result" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+
+                 let board = init board in
+                 let moves = get_all_moves board W in
+                 List.length moves == 0));
+          test_case "Invalid getter H" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Invalide horizontal pos" Invalid_horizontal_pos (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let h = Pos.h (-5) in
+                     let v = Pos.v 0 in
+                     get board h v)));
+          test_case "Invalid getter V" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Invalide vertical pos" Invalid_vertical_pos (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let h = Pos.h 5 in
+                     let v = Pos.v (-50) in
+                     get board h v)));
+          test_case "Invalid getter V" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Invalide vertical pos" Invalid_vertical_pos (fun () ->
+                  ignore
+                    (let board =
+                       [
+                         [ Empty; Empty; Empty; Empty ];
+                         [ Empty; Empty; Empty ];
+                         [ Empty; Empty; Empty; Empty ];
+                         [ Empty; Empty; Empty; Empty ];
+                         [ Empty; Empty; Empty; Empty ];
+                       ]
+                     in
+                     let h = Pos.h 0 in
+                     let v = Pos.v 5 in
+                     get board h v)));
+        ] );
     ]
