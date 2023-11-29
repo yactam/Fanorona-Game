@@ -268,64 +268,64 @@ let () =
           test_case "capture one pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-          (init
-                [
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture B
                       { position = (Pos.h 2, Pos.v 2); direction = W }
@@ -333,64 +333,64 @@ let () =
           test_case "capture two pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-              (init
-                [
-                  [
-                    Pawn B;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 3, Pos.v 1); direction = N }
@@ -398,63 +398,64 @@ let () =
           test_case "capture own pawn split" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 4, Pos.v 2); direction = N }
@@ -462,63 +463,64 @@ let () =
           test_case "capture by approach one pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 2, Pos.v 0); direction = N }
@@ -526,63 +528,64 @@ let () =
           test_case "capture by approach two pawns" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 3, Pos.v 1); direction = N }
@@ -590,63 +593,64 @@ let () =
           test_case "capture by approach split line" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 4, Pos.v 2); direction = E }
@@ -654,63 +658,64 @@ let () =
           test_case "capture by approach one pawn diagonal" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn W;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn W;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 3, Pos.v 7); direction = NW }
@@ -718,63 +723,64 @@ let () =
           test_case "capture by approach diagonal pawns" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 4, Pos.v 2); direction = NE }
@@ -785,63 +791,64 @@ let () =
           test_case "capture by withdrawal one pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 2, Pos.v 0); direction = N }
@@ -849,63 +856,64 @@ let () =
           test_case "capture by withdrawal two pawns" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 0, Pos.v 2); direction = E }
@@ -913,63 +921,64 @@ let () =
           test_case "capture by withdrawal diagonal" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Pawn B;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                  [
-                    Pawn B;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn B;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Pawn B;
-                    Pawn B;
-                    Empty;
-                    Pawn B;
-                    Empty;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Empty;
+                     ];
+                   ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 1, Pos.v 3); direction = NE }
@@ -1036,63 +1045,64 @@ let () =
           test_case "simple move" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn W;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn W;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                     ];
+                   ])
                 (fst
                    (make_move board_2 W
                       { position = (Pos.h 0, Pos.v 2); direction = W }
@@ -1100,63 +1110,64 @@ let () =
           test_case "capture move" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                (init[
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                  ];
-                  [
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn W;
-                  ];
-                  [
-                    Empty;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Empty;
-                    Empty;
-                    Pawn W;
-                    Pawn W;
-                    Pawn W;
-                  ];
-                ])
+                (init
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                     ];
+                     [
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                     ];
+                   ])
                 (fst
                    (make_move board_2_set0_1_B W
                       { position = (Pos.h 0, Pos.v 2); direction = E }

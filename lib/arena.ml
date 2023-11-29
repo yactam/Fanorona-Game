@@ -126,28 +126,31 @@ let rec player_teletype player board move_chain =
 
 let player_random player board move_chain =
   let all_moves = get_all_moves board player in
-  let capture_moves =
-    List.filter
-      (fun m ->
-        type_capture_move board m player <> None
-        && (List.is_empty move_chain || is_last_pawn_position_move m move_chain))
-      all_moves
-  in
-  let random_element lst =
-    let len = List.length lst in
-    if len = 0 then None else Some (List.nth lst (Random.int len))
-  in
-  let move_option =
-    let len = List.length capture_moves in
-    if len = 0 then random_element all_moves else random_element capture_moves
-  in
-  let type_capture_option =
-    match move_option with
-    | None -> None
-    | Some m -> type_capture_move board m player
-  in
-  Lwt.return
-    (Some
-       ( move_option,
-         if type_capture_option = Some Both then Some Approach
-         else type_capture_option ))
+  if List.is_empty all_moves then Lwt.return None
+  else
+    let capture_moves =
+      List.filter
+        (fun m ->
+          type_capture_move board m player <> None
+          && (List.is_empty move_chain
+             || is_last_pawn_position_move m move_chain))
+        all_moves
+    in
+    let random_element lst =
+      let len = List.length lst in
+      if len = 0 then None else Some (List.nth lst (Random.int len))
+    in
+    let move_option =
+      let len = List.length capture_moves in
+      if len = 0 then random_element all_moves else random_element capture_moves
+    in
+    let type_capture_option =
+      match move_option with
+      | None -> None
+      | Some m -> type_capture_move board m player
+    in
+    Lwt.return
+      (Some
+         ( move_option,
+           if type_capture_option = Some Both then Some Approach
+           else type_capture_option ))

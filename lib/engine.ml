@@ -85,7 +85,8 @@ type board = cell list list [@@deriving eq]
 let init model =
   assert (List.length model = nb_rows);
   assert (List.for_all (fun row -> List.length row = nb_cols) model);
-  assert (List.exists (fun row -> List.exists (fun cell -> cell = Empty) row) model);
+  assert (
+    List.exists (fun row -> List.exists (fun cell -> cell = Empty) row) model);
   model
 
 let initial_state_5x9 =
