@@ -5,13 +5,21 @@ let board_1_get res i j () =
   Alcotest.(check cell) "same result" res (get board_1 (Pos.h i) (Pos.v j))
 
 let make_flat_pawn board =
-  board |> List.flatten
-  |> List.filter (fun cell -> match cell with Empty -> false | _ -> true)
+  let rec aux acc i j =
+    match (i, j) with
+    | i, _ when i >= nb_rows -> List.rev acc
+    | i, j when j >= nb_cols -> aux acc (i + 1) 0
+    | i, j ->
+        let cell = get board (Pos.h i) (Pos.v j) in
+        aux (if cell = Empty then acc else cell :: acc) i (j + 1)
+  in
+  aux [] 0 0
 
 let is_capture_move_test =
   let open QCheck in
   Test.make ~count:1000 ~name:"for all capture move, board size before > after"
     (pair player_arbitrary board_arbitrary) (fun (player, board) ->
+      let board = init board in
       Format.printf "%a" pp_board board;
       Format.printf "%a" pp_player player;
       let moves = get_all_moves board player in
@@ -260,6 +268,7 @@ let () =
           test_case "capture one pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
+          (init
                 [
                   [
                     Pawn B;
@@ -316,7 +325,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture B
                       { position = (Pos.h 2, Pos.v 2); direction = W }
@@ -324,6 +333,7 @@ let () =
           test_case "capture two pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
+              (init
                 [
                   [
                     Pawn B;
@@ -380,7 +390,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 3, Pos.v 1); direction = N }
@@ -388,7 +398,7 @@ let () =
           test_case "capture own pawn split" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Pawn B;
@@ -444,7 +454,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 4, Pos.v 2); direction = N }
@@ -452,7 +462,7 @@ let () =
           test_case "capture by approach one pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Empty;
                     Pawn B;
@@ -508,7 +518,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 2, Pos.v 0); direction = N }
@@ -516,7 +526,7 @@ let () =
           test_case "capture by approach two pawns" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Empty;
@@ -572,7 +582,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 3, Pos.v 1); direction = N }
@@ -580,7 +590,7 @@ let () =
           test_case "capture by approach split line" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Pawn B;
@@ -636,7 +646,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 4, Pos.v 2); direction = E }
@@ -644,7 +654,7 @@ let () =
           test_case "capture by approach one pawn diagonal" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Pawn B;
@@ -700,7 +710,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 3, Pos.v 7); direction = NW }
@@ -708,7 +718,7 @@ let () =
           test_case "capture by approach diagonal pawns" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Pawn B;
@@ -764,7 +774,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 4, Pos.v 2); direction = NE }
@@ -775,7 +785,7 @@ let () =
           test_case "capture by withdrawal one pawn" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Pawn B;
@@ -831,7 +841,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 2, Pos.v 0); direction = N }
@@ -839,7 +849,7 @@ let () =
           test_case "capture by withdrawal two pawns" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Empty;
                     Empty;
@@ -895,7 +905,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 0, Pos.v 2); direction = E }
@@ -903,7 +913,7 @@ let () =
           test_case "capture by withdrawal diagonal" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Pawn B;
                     Pawn B;
@@ -959,7 +969,7 @@ let () =
                     Pawn B;
                     Empty;
                   ];
-                ]
+                ])
                 (fst
                    (make_move pre_capture W
                       { position = (Pos.h 1, Pos.v 3); direction = NE }
@@ -1026,7 +1036,7 @@ let () =
           test_case "simple move" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Empty;
                     Pawn W;
@@ -1082,7 +1092,7 @@ let () =
                     Pawn W;
                     Pawn W;
                   ];
-                ]
+                ])
                 (fst
                    (make_move board_2 W
                       { position = (Pos.h 0, Pos.v 2); direction = W }
@@ -1090,7 +1100,7 @@ let () =
           test_case "capture move" `Quick (fun () ->
               Alcotest.(check board)
                 "same result"
-                [
+                (init[
                   [
                     Empty;
                     Empty;
@@ -1146,7 +1156,7 @@ let () =
                     Pawn W;
                     Pawn W;
                   ];
-                ]
+                ])
                 (fst
                    (make_move board_2_set0_1_B W
                       { position = (Pos.h 0, Pos.v 2); direction = E }

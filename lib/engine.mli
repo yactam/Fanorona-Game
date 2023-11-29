@@ -64,11 +64,11 @@ type cell = Empty | Pawn of player
 val pp_cell : Format.formatter -> cell -> unit
 val equal_cell : cell -> cell -> bool
 
-type board = cell list list
-(** The game board is represented by a list of list of [cell]s *)
+type board 
+(** The game board *)
 
 val equal_board : board -> board -> bool
-val init : board -> board
+val init : cell list list -> board
 (** Check wether [model] is a valid game board and initialize it *)
 val initial_state_5x9 : board
 (** The initial state of a classic fanorana game board *)

@@ -12,6 +12,7 @@ let mult_run_test =
   Test.make ~count:iter
     ~name:(Format.asprintf "%d iterations of AI game run" iter)
     init_board_arbitrary (fun b ->
+      let b = init b in
       Format.printf "%a" pp_board b;
       let result =
         Lwt_main.run
