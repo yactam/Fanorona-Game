@@ -1301,7 +1301,6 @@ let () =
                      ];
                    ]
                  in
-
                  let board = init board in
                  let moves = get_all_moves board W in
                  List.length moves == 0));
@@ -1318,24 +1317,74 @@ let () =
                 "Invalide vertical pos" Invalid_vertical_pos (fun () ->
                   ignore
                     (let board = initial_state_5x9 in
-                     let h = Pos.h 5 in
+                     let h = Pos.h 4 in
                      let v = Pos.v (-50) in
                      get board h v)));
-          test_case "Invalid getter V" `Quick (fun () ->
-              Alcotest.(check_raises)
-                "Invalide vertical pos" Invalid_vertical_pos (fun () ->
-                  ignore
-                    (let board =
-                       [
-                         [ Empty; Empty; Empty; Empty ];
-                         [ Empty; Empty; Empty ];
-                         [ Empty; Empty; Empty; Empty ];
-                         [ Empty; Empty; Empty; Empty ];
-                         [ Empty; Empty; Empty; Empty ];
-                       ]
-                     in
-                     let h = Pos.h 0 in
-                     let v = Pos.v 5 in
-                     get board h v)));
+          test_case "Test getter" `Quick (fun () ->
+              Alcotest.(check bool)
+                "Getter valid" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 let h = Pos.h 4 in
+                 let v = Pos.v 4 in
+                 get board h v = Empty));
         ] );
     ]
