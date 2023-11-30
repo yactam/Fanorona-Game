@@ -1386,5 +1386,186 @@ let () =
                  let h = Pos.h 4 in
                  let v = Pos.v 4 in
                  get board h v = Empty));
+          test_case "Free cells" `Quick (fun () ->
+              Alcotest.(check bool)
+                "Free cells" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 List.length (free_cells board) = 5 * 9));
+          test_case "Move " `Quick (fun () ->
+              Alcotest.(check bool)
+                "Move" true
+                (let board =
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Pawn B;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                       Pawn W;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 let count = count_player board B in
+                 let board, history =
+                   make_move board W
+                     { position = (Pos.h 3, Pos.v 5); direction = NE }
+                     (Some Approach) []
+                 in
+                 let board, history =
+                   make_move board W
+                     { position = (Pos.h 2, Pos.v 6); direction = NW }
+                     (Some Approach) history
+                 in
+                 let board, _ =
+                   make_move board W
+                     { position = (Pos.h 1, Pos.v 5); direction = W }
+                     (Some Withdrawal) history
+                 in
+                 get board (Pos.h 2) (Pos.v 6) = Empty
+                 && get board (Pos.h 3) (Pos.v 5) = Empty
+                 && get board (Pos.h 1) (Pos.v 5) = Empty
+                 && count_player board B = count - 4
+                 && get board (Pos.h 1) (Pos.v 4) = Pawn W));
+          test_case "Move Invalid " `Quick (fun () ->
+              Alcotest.(check_raises) "Move Invalid" Invalid_position (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let board, history =
+                       make_move board W
+                         { position = (Pos.h 3, Pos.v 3); direction = NE }
+                         (Some Approach) []
+                     in
+                     let board, history =
+                       make_move board B
+                         { position = (Pos.h 2, Pos.v 2); direction = NE }
+                         (Some Approach) history
+                     in
+                     let board, history =
+                       make_move board B
+                         { position = (Pos.h 2, Pos.v 3); direction = N }
+                         (Some Approach) history
+                     in
+                     List.length history <> 0
+                     && get board (Pos.h 3) (Pos.v 3) = Empty)));
+          test_case "Not capture by withdramal" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Not_capture_by_withdrawal" Not_capture_by_withdrawal (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let board, history =
+                       make_move board W
+                         { position = (Pos.h 3, Pos.v 3); direction = NE }
+                         (Some Withdrawal) []
+                     in
+                     List.length history <> 0
+                     && get board (Pos.h 3) (Pos.v 3) = Empty)));
         ] );
     ]

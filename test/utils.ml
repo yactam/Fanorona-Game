@@ -124,3 +124,17 @@ let generate_init_state : cell list list Gen.t =
     [ black_row_gen; black_row_gen; mid_row_gen; white_row_gen; white_row_gen ]
 
 let init_board_arbitrary = make generate_init_state
+
+let count_player board player =
+  let rec aux board acc =
+    match board with
+    | [] -> acc
+    | h :: t ->
+        let acc =
+          List.fold_left
+            (fun acc c -> if c = Pawn player then acc + 1 else acc)
+            acc h
+        in
+        aux t acc
+  in
+  aux board 0
