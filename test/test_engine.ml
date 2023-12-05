@@ -1555,9 +1555,9 @@ let () =
                      in
                      List.length history <> 0
                      && get board (Pos.h 3) (Pos.v 3) = Empty)));
-          test_case "Not capture by withdramal" `Quick (fun () ->
+          test_case "Not capture by approach" `Quick (fun () ->
               Alcotest.(check_raises)
-                "Not_capture_by_withdrawal" Not_capture_by_withdrawal (fun () ->
+                "Not_capture_by_approach" Not_capture_by_approach (fun () ->
                   ignore
                     (let board = initial_state_5x9 in
                      let board, history =
