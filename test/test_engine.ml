@@ -1213,4 +1213,399 @@ let () =
                        { position = (Pos.h 2, Pos.v 0); direction = S }
                        (Some Approach) [])));
         ] );
+      ( "test albin",
+        [
+          test_case "Winner" `Quick (fun () ->
+              Alcotest.(check bool)
+                "same result" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Pawn W;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 win board W && not (win board B)));
+          test_case "Empty board" `Quick (fun () ->
+              Alcotest.(check bool)
+                "same result" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 let moves = get_all_moves board W in
+                 List.length moves == 0));
+          test_case "Invalid getter H" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Invalide horizontal pos" Invalid_horizontal_pos (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let h = Pos.h (-5) in
+                     let v = Pos.v 0 in
+                     get board h v)));
+          test_case "Invalid getter V" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Invalide vertical pos" Invalid_vertical_pos (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let h = Pos.h 4 in
+                     let v = Pos.v (-50) in
+                     get board h v)));
+          test_case "Test getter" `Quick (fun () ->
+              Alcotest.(check bool)
+                "Getter valid" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 let h = Pos.h 4 in
+                 let v = Pos.v 4 in
+                 get board h v = Empty));
+          test_case "Free cells" `Quick (fun () ->
+              Alcotest.(check bool)
+                "Free cells" true
+                (let board =
+                   [
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                     [
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 List.length (free_cells board) = 5 * 9));
+          test_case "Move " `Quick (fun () ->
+              Alcotest.(check bool)
+                "Move" true
+                (let board =
+                   [
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                       Empty;
+                       Empty;
+                       Pawn B;
+                       Pawn B;
+                       Pawn B;
+                     ];
+                     [
+                       Pawn B;
+                       Pawn W;
+                       Pawn B;
+                       Pawn W;
+                       Pawn W;
+                       Pawn B;
+                       Empty;
+                       Pawn B;
+                       Pawn W;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                       Pawn W;
+                     ];
+                     [
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Pawn W;
+                       Empty;
+                     ];
+                   ]
+                 in
+                 let board = init board in
+                 let count = count_player board B in
+                 let board, history =
+                   make_move board W
+                     { position = (Pos.h 3, Pos.v 5); direction = NE }
+                     (Some Approach) []
+                 in
+                 let board, history =
+                   make_move board W
+                     { position = (Pos.h 2, Pos.v 6); direction = NW }
+                     (Some Approach) history
+                 in
+                 let board, _ =
+                   make_move board W
+                     { position = (Pos.h 1, Pos.v 5); direction = W }
+                     (Some Withdrawal) history
+                 in
+                 get board (Pos.h 2) (Pos.v 6) = Empty
+                 && get board (Pos.h 3) (Pos.v 5) = Empty
+                 && get board (Pos.h 1) (Pos.v 5) = Empty
+                 && count_player board B = count - 4
+                 && get board (Pos.h 1) (Pos.v 4) = Pawn W));
+          test_case "Move Invalid " `Quick (fun () ->
+              Alcotest.(check_raises) "Move Invalid" Invalid_position (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let board, history =
+                       make_move board W
+                         { position = (Pos.h 3, Pos.v 3); direction = NE }
+                         (Some Approach) []
+                     in
+                     let board, history =
+                       make_move board B
+                         { position = (Pos.h 2, Pos.v 2); direction = NE }
+                         (Some Approach) history
+                     in
+                     let board, history =
+                       make_move board B
+                         { position = (Pos.h 2, Pos.v 3); direction = N }
+                         (Some Approach) history
+                     in
+                     List.length history <> 0
+                     && get board (Pos.h 3) (Pos.v 3) = Empty)));
+          test_case "Not capture by approach" `Quick (fun () ->
+              Alcotest.(check_raises)
+                "Not_capture_by_approach" Not_capture_by_approach (fun () ->
+                  ignore
+                    (let board = initial_state_5x9 in
+                     let board, history =
+                       make_move board W
+                         { position = (Pos.h 3, Pos.v 3); direction = NE }
+                         (Some Withdrawal) []
+                     in
+                     List.length history <> 0
+                     && get board (Pos.h 3) (Pos.v 3) = Empty)));
+        ] );
     ]
