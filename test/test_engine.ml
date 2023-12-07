@@ -43,6 +43,18 @@ let is_capture_move_test =
          && List.length (make_flat_pawn board)
             == List.length (make_flat_pawn new_board))
 
+let empty_board ~h ~v = List.init h (fun _ -> List.init v (fun _ -> Empty))
+
+let test_init_invalid_sizes =
+  let open QCheck in
+  Test.make ~count:1000 ~name:"for all invalid sizes, init should fail"
+    (pair small_int small_int) (fun (h, v) ->
+      assume (h <> nb_rows && v <> nb_cols);
+      try
+        let _ = init (empty_board ~h ~v) in
+        false
+      with Assert_failure _ -> true)
+
 let () =
   let open Alcotest in
   run "Engine"
@@ -90,6 +102,13 @@ let () =
               Alcotest.(check bool) "same result" false (win board_2_set0_1_B W));
           test_case "board_3-not-win-B" `Quick (fun () ->
               Alcotest.(check bool) "same result" false (win board_3 B));
+        ] );
+      ( "init",
+        [
+          test_case "valid board size" `Quick (fun () ->
+              let _ = init (empty_board ~h:nb_rows ~v:nb_cols) in
+              ());
+          QCheck_alcotest.to_alcotest test_init_invalid_sizes;
         ] );
       ( "is_valid_move_position",
         [

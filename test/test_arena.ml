@@ -26,6 +26,22 @@ let mult_run_test =
       | Win a -> win result.final a && not (win result.final (opponent a))
       | Giveup _ -> true)
 
+let test_player_giveup =
+  let open QCheck in
+  let iter = 100 in
+  Test.make ~count:iter ~name:"Player giveup always gives up"
+    init_board_arbitrary (fun b ->
+      let b = init b in
+      Format.printf "%a" pp_board b;
+      let result =
+        Lwt_main.run
+          (arena
+             (Fanorona.Arena.pair ~w:player_giveup ~b:player_giveup)
+             ~init_board:b)
+      in
+      List.length result.trace = 0
+      && match result.endgame with Win _ -> false | Giveup _ -> true)
+
 let () =
   let open Alcotest in
   run "Arena"
@@ -56,4 +72,6 @@ let () =
                  | Giveup x -> Format.asprintf "Player %a gave up" pp_player x)
                  (Format.asprintf "%a" pp_endgame result.endgame)));
         ] );
+      ( "Player giveup strategy",
+        [ QCheck_alcotest.to_alcotest test_player_giveup ] );
     ]
