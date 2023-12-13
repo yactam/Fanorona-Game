@@ -1,7 +1,7 @@
 open Engine
 
-let width = 9
-let height = 5
+let width = nb_cols
+let height = nb_rows
 
 type gameTree = Node of (gameTree * int) list | Leaf of int
 
@@ -22,34 +22,52 @@ let rate_board board (player : player) =
   in
   count_cell height width 0
 
-let _rating_function = None
+let _rating_function _board = 0
 
-let rec _minimax (nodes : gameTree) (depth : int) (maxplayer : bool)
-    (player : player) =
-  if depth < 0 then 0
+let rec _minimax (depth : int) (maxplayer : bool) (player : player)
+    player_list_move opponent_list_move _actual_board =
+  if depth < 0 then (0, None)
   else
-    match nodes with
-    | Leaf value -> value (* TODO : Obtain heuristic value *)
-    | Node _possibles_moves ->
-        if _possibles_moves = [] then 0
-        else if depth = 0 then List.hd _possibles_moves |> snd
-        else if maxplayer then
-          (* max player *)
+    get_all_moves _actual_board player |> function
+    | [] -> (-100, None) (* TODO : Obtain heuristic value *)
+    | [ move ] -> (_rating_function _actual_board, Some move)
+    | move :: _ when depth = 0 -> (0, Some move)
+    | _possibles_moves ->
+        if maxplayer then
+          (* player *)
           List.fold_left
-            (fun max v -> Stdlib.max max v)
-            0
-            (List.map
+            (fun (max, move) (v, move2) ->
+              if Stdlib.max max v = max then (max, move) else (v, move2))
+            (0, None)
+            (List.filter_map
                (fun move ->
-                 _minimax (fst move) (depth - 1) false (opponent player))
+                 let continue =
+                   can_continue _actual_board player move player_list_move
+                 in
+                 try
+                   let new_board, new_list_move =
+                     make_move _actual_board player move
+                       (type_capture_move _actual_board move player)
+                       player_list_move
+                   in
+                   Some
+                     ( _minimax (depth - 1) continue
+                         (if continue then player else opponent player)
+                         new_list_move opponent_list_move new_board
+                       |> fst,
+                       Some move )
+                 with _ -> None)
                _possibles_moves)
         else
-          (* min player *)
+          (* opponent player *)
           List.fold_left
-            (fun min v -> Stdlib.min min v)
-            max_int
+            (fun (min, move) (v, move2) ->
+              if Stdlib.min min v = min then (min, move) else (v, move2))
+            (max_int, None)
             (List.map
                (fun move ->
-                 _minimax (fst move) (depth - 1) true (opponent player))
+                 _minimax (depth - 1) true (opponent player)
+                   (move :: player_list_move) [] _actual_board)
                _possibles_moves)
 
 let player player board move_chain =
