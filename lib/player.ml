@@ -11,6 +11,10 @@ let count_player board player =
   in
   aux 0 0 0
 
+let random_element lst =
+  let len = List.length lst in
+  if len = 0 then None else Some (List.nth lst (Random.int len))
+
 let next_move (player : player) board list_move =
   get_all_moves board player |> function
   | [] -> None
@@ -24,27 +28,34 @@ let next_move (player : player) board list_move =
                || is_last_pawn_position_move m list_move))
           moves
       in
-      captures_moves
-      |> List.filter_map (fun move ->
-             try
-               let _new_board, _new_list_move =
-                 make_move board player move
-                   (type_capture_move board move player)
-                   list_move
-               in
-               Some (count_player _new_board (opponent player), move)
-             with
-             | Capture_move_restrictions_broken | Compulsory_capture -> None
-             | _ -> Some (100, move))
-      |> List.fold_left
-           (fun (min, best_move) (remaining_opponents, move) ->
-             if min < remaining_opponents then (min, best_move)
-             else (remaining_opponents, Some move))
-           (max_int, None)
-      |> snd
-      |> function
-      | Some move -> Some move
-      | None -> Some (List.hd movements))
+      captures_moves |> function
+      | [] -> random_element movements
+      | captures_moves -> (
+          captures_moves
+          |> List.filter_map (fun move ->
+                 try
+                   let _new_board, _new_list_move =
+                     make_move board player move
+                       (type_capture_move board move player)
+                       list_move
+                   in
+                   let continue =
+                     can_continue _new_board player move list_move
+                   in
+                   let value = if continue then 5 else 0 in
+                   Some (count_player _new_board (opponent player) - value, move)
+                 with
+                 | Capture_move_restrictions_broken | Compulsory_capture -> None
+                 | _ -> Some (-2, move))
+          |> List.fold_left
+               (fun (min, best_move) (remaining_opponents, move) ->
+                 if min < remaining_opponents then (min, best_move)
+                 else (remaining_opponents, Some move))
+               (max_int, None)
+          |> snd
+          |> function
+          | Some move -> Some move
+          | None -> Some (List.hd movements)))
 
 let player_lacenne player board move_chain =
   let all_moves = get_all_moves board player in
@@ -54,10 +65,9 @@ let player_lacenne player board move_chain =
     let type_capture_option =
       match move_option with
       | None -> None
-      | Some move -> type_capture_move board move player
+      | Some move -> (
+          type_capture_move board move player |> function
+          | Some Both -> Some Approach
+          | type_capture -> type_capture)
     in
-    Lwt.return
-      (Some
-         ( move_option,
-           if type_capture_option = Some Both then Some Approach
-           else type_capture_option ))
+    Lwt.return (Some (move_option, type_capture_option))
