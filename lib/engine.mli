@@ -68,13 +68,18 @@ type board
 (** The game board *)
 
 val equal_board : board -> board -> bool
+
 val init : cell list list -> board
 (** Check wether [model] is a valid game board and initialize it *)
+
 val initial_state_5x9 : board
 (** The initial state of a classic fanorana game board *)
+
 val pp_board : Format.formatter -> board -> unit
+
 val get : board -> hpos -> vpos -> cell
 (** Get from the board the [cell] at position([i], [j]) *)
+
 val iteri : (hpos -> vpos -> cell -> unit) -> board -> unit
 (** Iterates the function [hpos -> vpos -> cell -> unit] over the board [board] *)
 
@@ -82,8 +87,10 @@ exception Occupied_cell
 
 val free_cells : board -> (hpos * vpos) list
 (** Return a [(hpos * vpos) list] of free cells in the board [board] *)
+
 val win : board -> player -> bool
 (** Check wether the player [player] has won according to [board] *)
+
 val get_all_moves : board -> player -> move list
 (** Get a list of all possible moves of player [player] on board [board] but not some of them may be illegal in a specific game *)
 
@@ -106,9 +113,11 @@ exception Capture_move_restrictions_broken
 val position_or_direction_or_line_already_executed : move list -> move -> bool
 (** Check if the [move] satisfies the three move constraints in multiple capturing moves
     which are stored in the [move list] *)
+
 val can_continue : board -> player -> move -> move list -> bool
 (** Check if [player] can continue capturing on the [board] based on his last [move] 
     and his history of captures [move list] *)
+
 val is_last_pawn_position_move : move -> move list -> bool
 (** Check if the [move] uses the same pawn as the last move in [move list] *)
 
