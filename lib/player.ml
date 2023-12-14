@@ -11,19 +11,38 @@ let count_player board player =
   in
   aux 0 0 0
 
+let random_element lst =
+  let len = List.length lst in
+  if len = 0 then None else Some (List.nth lst (Random.int len))
+
 let center_x, center_y = (nb_cols / 2, nb_rows / 2)
 
-let dist_from_center (x, y) =
-  abs (Engine.get_line x - center_x) + abs (Engine.get_col y - center_y)
+let control_points =
+  [
+    (center_x, center_y);
+    (center_x, 0);
+    (center_x, nb_rows - 1);
+    (0, center_y);
+    (nb_cols - 1, center_y);
+  ]
+
+let dist_from_controls_points (x, y) =
+  List.map
+    (fun (cpx, cpy) ->
+      abs (Engine.get_line x - cpx) + abs (Engine.get_col y - cpy))
+    control_points
 
 let closest_to_center moves =
   moves
-  |> List.map (fun move -> (move.position |> dist_from_center, Some move))
+  |> List.map (fun move ->
+         ( move.position |> dist_from_controls_points
+           |> List.fold_left (fun min x -> Stdlib.min min x) max_int,
+           Some move ))
   |> List.fold_left
        (fun (shortest_dist, move) (new_dist, new_move) ->
          if shortest_dist < new_dist then (shortest_dist, move)
          else (new_dist, new_move))
-       (max_int, Some (List.hd moves))
+       (max_int, random_element moves)
   |> snd
 
 let next_move (player : player) board list_move =
@@ -69,6 +88,7 @@ let next_move (player : player) board list_move =
           | None -> Some (List.hd movements)))
 
 let player_lacenne player board move_chain =
+  Format.printf "%a" pp_board board;
   let all_moves = get_all_moves board player in
   if List.is_empty all_moves then Lwt.return None
   else
