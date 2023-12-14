@@ -11,9 +11,20 @@ let count_player board player =
   in
   aux 0 0 0
 
-let random_element lst =
-  let len = List.length lst in
-  if len = 0 then None else Some (List.nth lst (Random.int len))
+let center_x, center_y = (nb_cols / 2, nb_rows / 2)
+
+let dist_from_center (x, y) =
+  abs (Engine.get_line x - center_x) + abs (Engine.get_col y - center_y)
+
+let closest_to_center moves =
+  moves
+  |> List.map (fun move -> (move.position |> dist_from_center, Some move))
+  |> List.fold_left
+       (fun (shortest_dist, move) (new_dist, new_move) ->
+         if shortest_dist < new_dist then (shortest_dist, move)
+         else (new_dist, new_move))
+       (max_int, Some (List.hd moves))
+  |> snd
 
 let next_move (player : player) board list_move =
   get_all_moves board player |> function
@@ -29,7 +40,7 @@ let next_move (player : player) board list_move =
           moves
       in
       captures_moves |> function
-      | [] -> random_element movements
+      | [] -> closest_to_center movements
       | captures_moves -> (
           captures_moves
           |> List.filter_map (fun move ->
