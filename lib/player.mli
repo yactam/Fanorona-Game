@@ -1,4 +1,4 @@
 open Engine
 
-val player :
+val player_lacenne :
   player -> board -> move list -> (move option * capture option) option Lwt.t
