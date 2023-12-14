@@ -45,6 +45,20 @@ let closest_to_center moves =
        (max_int, random_element moves)
   |> snd
 
+let keep_n =
+  let rec to_keep acc n l =
+    if n = 0 then acc
+    else l |> function [] -> acc | el :: xs -> to_keep (el :: acc) (n - 1) xs
+  in
+  to_keep []
+
+let count element =
+  let rec total n = function
+    | [] -> n
+    | x :: xs -> total (if x = element then n + 1 else n) xs
+  in
+  total 0
+
 let next_move (player : player) board list_move =
   get_all_moves board player |> function
   | [] -> None
@@ -59,7 +73,13 @@ let next_move (player : player) board list_move =
           moves
       in
       captures_moves |> function
-      | [] -> closest_to_center movements
+      | [] ->
+          let last_five_moves = keep_n 15 list_move in
+          movements
+          |> List.map (fun move -> (count move last_five_moves, move))
+          |> List.filter_map (fun (counter, move) ->
+             if counter < 1 then Some move else None)
+          |> closest_to_center
       | captures_moves -> (
           captures_moves
           |> List.filter_map (fun move ->
@@ -88,7 +108,7 @@ let next_move (player : player) board list_move =
           | None -> Some (List.hd movements)))
 
 let player_lacenne player board move_chain =
-  Format.printf "%a" pp_board board;
+  (* Format.printf "%a" pp_board board; *)
   let all_moves = get_all_moves board player in
   if List.is_empty all_moves then Lwt.return None
   else
