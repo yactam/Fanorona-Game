@@ -100,13 +100,17 @@ let how_close player board move =
   |SE -> aux (h+1) (v-1) 1 (-1) 0
 
 let count_side_lost player board (h,v) acch accv=
-  if (is_side_secure player board (h,v) (h+acch,v+accv))
-    then 0
-  else let rec aux h v hvar vvar acc=
-    if(get board (Pos.h h) (Pos. v v) != Pawn player)
-      then acc
-    else aux (h+hvar) (v+vvar) hvar vvar (acc+1)
-  in aux h v (- acch) (- accv) 0
+  if(in_board h v) then
+    if (is_side_secure player board (h,v) (h+acch,v+accv))
+      then 0
+    else let rec aux h v hvar vvar acc=
+     if (in_board h v) then
+        if(get board (Pos.h h) (Pos. v v) != Pawn player)
+        then acc
+        else aux (h+hvar) (v+vvar) hvar vvar (acc+1)
+      else acc
+    in aux h v (- acch) (- accv) 0
+  else 0
 
 let how_many_lost player board move =
   let aux h v= 
