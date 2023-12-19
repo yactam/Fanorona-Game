@@ -1,4 +1,5 @@
 open Fanorona.Arena
+open Ia
 
 let wrap s player = (s, fun p b ms -> Printf.eprintf "\r                    "; Printf.eprintf "\r%s%!" s; player p b ms)
 
