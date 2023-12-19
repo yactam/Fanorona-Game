@@ -1,0 +1,4 @@
+(library
+ (name ia)
+ (libraries fanorona)
+ )
