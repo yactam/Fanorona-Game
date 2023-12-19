@@ -6,8 +6,8 @@ let find_better l f=
   let rec aux l m=
     match l with
     |[] -> m
-    |e :: next -> if (f m) > (f e) then aux next m else aux next e
-  in aux l (List.hd l)
+    |e :: next -> if f m e then aux next m else aux next e
+  in aux (List.tl l) (List.hd l)
 
 let is_taker player board move = 
   match type_capture_move board move player with
