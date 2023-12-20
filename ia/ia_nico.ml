@@ -147,7 +147,8 @@ let better_move p b moves=
       then find_better secure_moves (fun m1 m2 -> (how_close p b m1) < (how_close p b m2))
     else find_better moves (fun m1 m2-> (how_many_lost p b m1) < (how_many_lost p b m2))
 
-let ia_player player board moves : (move option * capture option) option Lwt.t =
+let ia_player player board moves : (move option * capture option) option Lwt.t=
+  let moves= get_all_moves board player in
   match moves with
   |[] -> Lwt.return None
   |_ -> let m = better_move player board moves
