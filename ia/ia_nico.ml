@@ -124,14 +124,14 @@ let count_side_lost player board (h,v) acch accv=
 
 let how_many_lost player board move =
   let aux h v= 
-    Stdlib.max(count_side_lost player board (h,v+1) 0 1,
-    Stdlib.max(count_side_lost player board (h+1,v+1) 1 1,
-    Stdlib.max(count_side_lost player board (h+1,v) 1 0,
-    Stdlib.max(count_side_lost player board (h+1,v-1) 1 (-1),
-    Stdlib.max(count_side_lost player board (h,v-1) 0 (-1),
-    Stdlib.max(count_side_lost player board (h-1,v-1) (-1) (-1),
-    Stdlib.max(count_side_lost player board (h-1,v) (-1) 0,
-    count_side_lost player board (h-1,v+1) (-1) 1)))))))
+    Stdlib.max (count_side_lost player board (h,v+1) 0 1)
+    (Stdlib.max (count_side_lost player board (h+1,v+1) 1 1)
+    (Stdlib.max (count_side_lost player board (h+1,v) 1 0)
+    (Stdlib.max (count_side_lost player board (h+1,v-1) 1 (-1))
+    (Stdlib.max (count_side_lost player board (h,v-1) 0 (-1))
+    (Stdlib.max (count_side_lost player board (h-1,v-1) (-1) (-1))
+    (Stdlib.max (count_side_lost player board (h-1,v) (-1) 0)
+    (count_side_lost player board (h-1,v+1) (-1) 1)))))))
   in
   let h= get_line (fst move.position) in
   let v= get_col (snd move.position)  in
