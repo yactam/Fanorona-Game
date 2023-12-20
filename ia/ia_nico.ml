@@ -2,12 +2,28 @@ open Fanorona.Engine
 
 let in_board x y= x>=0 && x<nb_rows && y>=0 && x<nb_cols
 
-let find_better l f=
-  let rec aux l m=
+let valid_chain_move move chain=
+  let rec aux chain=
+    match chain with
+    | [] -> true
+    | m :: next -> if m.direction = move.direction || m.position = move.position then false else aux next
+  in aux chain
+
+let find_better list f chain=
+  let rec aux l move=
     match l with
-    |[] -> m
-    |e :: next -> if f m e then aux next m else aux next e
-  in aux (List.tl l) (List.hd l)
+    |[] -> Some move
+    |e :: next -> 
+      if valid_chain_move e chain
+        then if f move e then aux next move else aux next e
+      else aux next move
+  in
+  if chain=[] then aux (List.tl list) (List.hd list)
+  else let rec find_start l=
+    match l with
+    |[] -> None
+    |m :: next -> if valid_chain_move m chain then aux next m else find_start next
+  in find_start list
 
 let is_taker player board move = 
   match type_capture_move board move player with
@@ -135,21 +151,22 @@ let how_many_lost player board move =
   |NW -> aux (h-1) (v+1)
   |SE -> aux (h+1) (v-1)
 
-let better_move p b moves=
+let better_move p b moves move_chain=
   let taker_moves = List.filter (fun m -> is_taker p b m) moves in 
   if(List.length taker_moves != 0) 
     then let taker_secure_moves = List.filter (fun m -> is_secure p b m) taker_moves in 
     if(List.length taker_secure_moves != 0)
-      then find_better taker_secure_moves (fun m1 m2-> (how_many_take p b m1) > (how_many_take p b m2))
-    else find_better taker_moves (fun m1 m2-> (how_many_take p b m1)>(how_many_take p b m2))
-  else let secure_moves= List.filter (fun m -> is_secure p b m) moves in 
+      then find_better taker_secure_moves (fun m1 m2-> (how_many_take p b m1) > (how_many_take p b m2)) move_chain
+    else find_better taker_moves (fun m1 m2-> (how_many_take p b m1)>(how_many_take p b m2)) move_chain
+  else let secure_moves= List.filter (fun m -> is_secure p b m) moves in
     if(List.length secure_moves != 0) 
-      then find_better secure_moves (fun m1 m2 -> (how_close p b m1) < (how_close p b m2))
-    else find_better moves (fun m1 m2-> (how_many_lost p b m1) < (how_many_lost p b m2))
+      then find_better secure_moves (fun m1 m2 -> (how_close p b m1) < (how_close p b m2)) move_chain
+    else find_better moves (fun m1 m2-> (how_many_lost p b m1) < (how_many_lost p b m2)) move_chain
 
-let ia_player player board moves : (move option * capture option) option Lwt.t=
+let ia_player player board move_chain : (move option * capture option) option Lwt.t=
   let moves= get_all_moves board player in
   match moves with
   |[] -> Lwt.return None
-  |_ -> let m = better_move player board moves
-    in Lwt.return (Some (Some m, type_capture_move board m player))
+  |_ -> match better_move player board moves move_chain with
+        |None -> Lwt.return None
+        |Some m -> Lwt.return (Some (Some m, type_capture_move board m player))
