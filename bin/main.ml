@@ -7,7 +7,8 @@ let players = [| wrap "Fanorona.random" player_random;
                  (* wrap "Abounaim" Fanorona.Abounaim.minimax_player; *)
                  wrap "Rzeszutek" player_artacalan;
                  (* wrap "Coutard" Fanorona.Coutard.player; *)
-                 wrap "Nico" Fanorona.Nico.ia_player |]
+                 wrap "Nico" Fanorona.Nico.ia_player;
+                 wrap "Fitzgerald" Fanorona.Fitzgerald.execute |]
 
 let () =
   Random.self_init ();
