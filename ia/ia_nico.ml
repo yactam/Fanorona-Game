@@ -1,6 +1,6 @@
 open Fanorona.Engine
 
-let in_board x y= x>=0 && x<nb_rows && y>=0 && x<nb_cols
+let in_board x y= x>=0 && x<nb_rows && y>=0 && y<nb_cols
 
 let valid_chain_move move chain=
   let rec aux chain=
