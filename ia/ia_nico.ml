@@ -32,7 +32,7 @@ let is_taker player board move =
          |Empty -> true
         |Pawn p -> p = player
       )
-      | Pawn p -> if p= player then true else cell x2 y2 != Empty
+      | Pawn p -> if p= player then true else cell x2 y2 <> Empty
     else true
 
 let is_secure player board move =
@@ -115,7 +115,7 @@ let count_side_lost player board (h,v) acch accv=
       then 0
     else let rec aux h v hvar vvar acc=
      if (in_board h v) then
-        if(get board (Pos.h h) (Pos. v v) != Pawn player)
+        if(get board (Pos.h h) (Pos. v v) <> Pawn player)
         then acc
         else aux (h+hvar) (v+vvar) hvar vvar (acc+1)
       else acc
@@ -147,7 +147,7 @@ let how_many_lost player board move =
 
 let capture_type player board move=
   let capture= type_capture_move board move player in
-  if capture != Some Both then capture 
+  if capture <> Some Both then capture 
   else
   let rec count_take h v hvar vvar acc=
     if (in_board h v) then
@@ -175,13 +175,13 @@ let capture_type player board move=
 
 let better_move p b moves move_chain=
   let taker_moves = List.filter (fun m -> is_taker p b m) moves in 
-  if(List.length taker_moves != 0) 
+  if(List.length taker_moves <> 0) 
     then let taker_secure_moves = List.filter (fun m -> is_secure p b m) taker_moves in 
-    if(List.length taker_secure_moves != 0)
+    if(List.length taker_secure_moves <> 0)
       then find_better taker_secure_moves (fun m1 m2-> (how_many_take p b m1) > (how_many_take p b m2)) move_chain
     else find_better taker_moves (fun m1 m2-> (how_many_take p b m1)>(how_many_take p b m2)) move_chain
   else let secure_moves= List.filter (fun m -> is_secure p b m) moves in
-    if(List.length secure_moves != 0) 
+    if(List.length secure_moves <> 0) 
       then find_better secure_moves (fun m1 m2 -> (how_close p b m1) < (how_close p b m2)) move_chain
     else find_better moves (fun m1 m2-> (how_many_lost p b m1) < (how_many_lost p b m2)) move_chain
 
