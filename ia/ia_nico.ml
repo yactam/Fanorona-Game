@@ -190,8 +190,6 @@ let ia_player player board move_chain : (move option * capture option) option Lw
   match moves with
   |[] -> Lwt.return None
   |_ -> match better_move player board moves move_chain with
-        |None -> if List.length moves <> 0 
-          then let random_move= Random.init (int_of_float (Sys.time ())); List.nth moves (Random.int (List.length moves)) in
+        |None -> let random_move= Random.init (int_of_float (Sys.time ())); List.nth moves (Random.int (List.length moves)) in
             Lwt.return (Some (Some random_move, capture_type player board random_move)) 
-          else Lwt.return None
         |Some m -> Lwt.return (Some (Some m, capture_type player board m))
