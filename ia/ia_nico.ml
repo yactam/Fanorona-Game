@@ -145,6 +145,34 @@ let how_many_lost player board move =
   |NW -> aux (h-1) (v+1)
   |SE -> aux (h+1) (v-1)
 
+let capture_type player board move=
+  let capture= type_capture_move board move player in
+  if capture != Some Both then capture 
+  else
+  let rec count_take h v hvar vvar acc=
+    if (in_board h v) then
+      let cell= get board (Pos.h h) (Pos.v v) in
+      if cell = Empty || cell = Pawn player then acc
+      else count_take (h+hvar) (v+vvar) hvar vvar (acc+1)
+    else acc
+  in
+  let aux h v acch accv= 
+    let approach= count_take (h+(acch*2)) (v+(accv*2)) acch accv 0  in
+    let withdraw= count_take (h-acch) (h-accv) (-acch) (-accv) 0 in 
+    if approach > withdraw then Some Approach else Some Withdrawal
+  in
+  let h= get_line (fst move.position) in
+  let v= get_col (snd move.position)  in
+  match move.direction with
+  |N -> aux h v 0 1
+  |S -> aux h v 0 (-1)
+  |E -> aux h v 1 0
+  |W -> aux h v (-1) 0
+  |NE -> aux h v 1 1
+  |SW -> aux h v (-1) (-1)
+  |NW -> aux h v (-1) 1
+  |SE -> aux h v 1 (-1)
+
 let better_move p b moves move_chain=
   let taker_moves = List.filter (fun m -> is_taker p b m) moves in 
   if(List.length taker_moves != 0) 
@@ -163,4 +191,4 @@ let ia_player player board move_chain : (move option * capture option) option Lw
   |[] -> Lwt.return None
   |_ -> match better_move player board moves move_chain with
         |None -> Lwt.return None
-        |Some m -> Lwt.return (Some (Some m, type_capture_move board m player))
+        |Some m -> Lwt.return (Some (Some m, capture_type player board m))
