@@ -2,27 +2,21 @@ open Fanorona.Engine
 
 let in_board x y= x>=0 && x<nb_rows && y>=0 && y<nb_cols
 
-let valid_chain_move move chain=
-  let rec aux chain=
-    match chain with
-    | [] -> true
-    | m :: next -> if m.direction = move.direction || m.position = move.position then false else aux next
-  in aux chain
-
 let find_better list f chain=
   let rec aux l move=
     match l with
     |[] -> Some move
     |e :: next -> 
-      if valid_chain_move e chain
+      if (position_or_direction_or_line_already_executed chain e)
         then if f move e then aux next move else aux next e
       else aux next move
   in
-  if chain=[] then aux (List.tl list) (List.hd list)
-  else let rec find_start l=
+  match chain with
+  |[] -> aux (List.tl list) (List.hd list)
+  |_ -> let rec find_start l=
     match l with
     |[] -> None
-    |m :: next -> if valid_chain_move m chain then aux next m else find_start next
+    |m :: next -> if position_or_direction_or_line_already_executed chain m then aux next m else find_start next
   in find_start list
 
 let is_taker player board move = 
