@@ -19,7 +19,10 @@ let center_x, center_y = (nb_cols / 2, nb_rows / 2)
 
 let control_points =
   [
-    (center_x, center_y);
+    (center_x + 2, center_y + 1);
+    (center_x - 2, center_y - 1);
+    (center_x + 2, center_y - 1);
+    (center_x - 2, center_y + 1);
     (center_x, 0);
     (center_x, nb_rows - 1);
     (0, center_y);
@@ -59,56 +62,62 @@ let count element =
   in
   total 0
 
+let filter_valid_moves board player list_move =
+  List.filter_map (fun move ->
+      try
+        let _new_board, _new_list_move =
+          make_move board player move
+            (type_capture_move board move player)
+            list_move
+        in
+        let continue = can_continue _new_board player move list_move in
+        let value = if continue then 5 else 0 in
+        Some (count_player _new_board (opponent player) - value, move)
+      with
+      | Capture_move_restrictions_broken | Compulsory_capture | Invalid_position
+        ->
+          None
+      | _ -> Some (-2, move))
+
+let partition_capture_move board player list_move =
+  List.partition (fun m ->
+      type_capture_move board m player <> None
+      && (List.is_empty list_move || is_last_pawn_position_move m list_move))
+
+let choose_best_capture_move board player movements list_move = function
+  | [] ->
+      let last_five_moves = keep_n 10 list_move in
+      movements
+      |> List.map (fun move -> (count move last_five_moves, move))
+      |> List.filter_map (fun (counter, move) ->
+             if counter <= 1 then Some move else None)
+      |> closest_to_center
+  | captures_moves -> (
+      captures_moves
+      |> filter_valid_moves board player list_move
+      |> List.fold_left
+           (fun (min, best_move) (remaining_opponents, move) ->
+             if min < remaining_opponents then (min, best_move)
+             else (remaining_opponents, Some move))
+           (max_int, None)
+      |> snd
+      |> function
+      | Some move -> Some move
+      | None -> Some (List.hd movements))
+
 let next_move (player : player) board list_move =
   get_all_moves board player |> function
   | [] -> None
   | [ move ] -> Some move
-  | moves -> (
+  | moves ->
       let captures_moves, movements =
-        List.partition
-          (fun m ->
-            type_capture_move board m player <> None
-            && (List.is_empty list_move
-               || is_last_pawn_position_move m list_move))
-          moves
+        partition_capture_move board player list_move moves
       in
-      captures_moves |> function
-      | [] ->
-          let last_five_moves = keep_n 15 list_move in
-          movements
-          |> List.map (fun move -> (count move last_five_moves, move))
-          |> List.filter_map (fun (counter, move) ->
-             if counter < 1 then Some move else None)
-          |> closest_to_center
-      | captures_moves -> (
-          captures_moves
-          |> List.filter_map (fun move ->
-                 try
-                   let _new_board, _new_list_move =
-                     make_move board player move
-                       (type_capture_move board move player)
-                       list_move
-                   in
-                   let continue =
-                     can_continue _new_board player move list_move
-                   in
-                   let value = if continue then 5 else 0 in
-                   Some (count_player _new_board (opponent player) - value, move)
-                 with
-                 | Capture_move_restrictions_broken | Compulsory_capture -> None
-                 | _ -> Some (-2, move))
-          |> List.fold_left
-               (fun (min, best_move) (remaining_opponents, move) ->
-                 if min < remaining_opponents then (min, best_move)
-                 else (remaining_opponents, Some move))
-               (max_int, None)
-          |> snd
-          |> function
-          | Some move -> Some move
-          | None -> Some (List.hd movements)))
+      captures_moves
+      |> choose_best_capture_move board player movements list_move
 
 let player_lacenne player board move_chain =
-  (* Format.printf "%a" pp_board board; *)
+  Format.printf "%a" pp_board board;
   let all_moves = get_all_moves board player in
   if List.is_empty all_moves then Lwt.return None
   else
