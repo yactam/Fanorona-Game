@@ -7,7 +7,7 @@ let find_better list f chain=
     match l with
     |[] -> Some move
     |e :: next -> 
-      if (position_or_direction_or_line_already_executed chain e)
+      if not (position_or_direction_or_line_already_executed chain e)
         then if f move e then aux next move else aux next e
       else aux next move
   in
@@ -16,7 +16,7 @@ let find_better list f chain=
   |_ -> let rec find_start l=
     match l with
     |[] -> None
-    |m :: next -> if position_or_direction_or_line_already_executed chain m then aux next m else find_start next
+    |m :: next -> if not (position_or_direction_or_line_already_executed chain m) then aux next m else find_start next
   in find_start list
 
 let is_taker player board move = 
