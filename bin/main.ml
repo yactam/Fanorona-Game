@@ -12,6 +12,8 @@ let players = [| wrap "Fanorona.random" player_random;
                  wrap "Hijazi" Fanorona.Hijazi.custom_player ;
                  wrap "Laidouni" Fanorona.Laidouni.my_ia2 |]
 
+let score = Array.init (Array.length players) (fun _ -> 0)
+
 let () =
   Random.self_init ();
   Format.open_vbox 0;
@@ -62,9 +64,16 @@ let () =
     end;
       let wins_i_ratio = (!wins_i * 100) / (2 * max_games) in
       let wins_j_ratio = (!wins_j * 100) / (2 * max_games) in
-      Format.printf "@[<h 4>%.1f@;<4 4>%s@;<4 4>%d@;<4 4>%s@;<4 4>%d@]@;" ((Sys.time () -. t) *. (1000. /. (2. *. float_of_int max_games))) pi wins_i_ratio pj wins_j_ratio ;
+      Format.printf "@[<h>%.1f@;<4 4>%s@;<4 4>%d@;<4 4>%s@;<4 4>%d@]@;" ((Sys.time () -. t) *. (1000. /. (2. *. float_of_int max_games))) pi wins_i_ratio pj wins_j_ratio ;
+      if wins_i > wins_j then
+        score.(i) <- score.(i) + 1
+      else if wins_j > wins_i then
+        score.(j) <- score.(j) + 1
     done
   done;
   Format.close_box ();
+  Format.open_vbox 0;
+  score |> Array.iteri (fun i score ->
+      Format.printf "@[<h>%s@;<4 4>%d@]@;" (fst players.(i)) score);
   Format.printf "@.";
   Printf.eprintf "\n"
