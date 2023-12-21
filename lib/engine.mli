@@ -55,6 +55,8 @@ val equal_dir : dir -> dir -> bool
 type move = { position : pos; direction : dir }
 (** A move is represented by a starting position and a direction *)
 
+val destination_pos : move -> (hpos * vpos) option
+val get_destination_pos : move -> hpos * vpos
 val equal_move : move -> move -> bool
 val pp_move : Format.formatter -> move -> unit
 
@@ -111,6 +113,7 @@ val can_continue : board -> player -> move -> move list -> bool
     and his history of captures [move list] *)
 val is_last_pawn_position_move : move -> move list -> bool
 (** Check if the [move] uses the same pawn as the last move in [move list] *)
+val is_valid_move_position : board -> move -> player -> bool
 
 val make_move :
   board -> player -> move -> capture option -> move list -> board * move list
@@ -125,3 +128,6 @@ val make_move :
     of the capture he wants to execute
     [raise Capture_move_restrictions_broken] if the [move] brokes a restriction of multiple capture moves
     *)
+
+val count_pawn_to_down_approchal : board -> player -> move -> int
+val count_pawn_to_down_withdrawal : board -> player -> move -> int

@@ -1,8 +1,8 @@
 open Fanorona.Arena
 
 let players = [| ("Fanorona.random1", player_random);
-                 ("Fanorona.random2", player_random);
-                 ("Lacenne", Fanorona.Lacenne.bot) |]
+                 ("Lacenne", Fanorona.Lacenne.bot);
+                 (* ("Rzeszutek", player_artacalan) *) |]
 
 let () =
   Random.self_init ();

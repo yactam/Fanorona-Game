@@ -47,3 +47,6 @@ val player_giveup :
 val player_random :
   player -> board -> move list -> (move option * capture option) option Lwt.t
 (** A bot to generate moves *)
+
+val player_artacalan :
+  player -> board -> move list -> (move option * capture option) option Lwt.t
