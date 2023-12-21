@@ -134,4 +134,4 @@ module BotYanis = struct
       Lwt.return (Some (move_option, type_capture_option))
 end
 
-let botYanis = BotYanis.player_lacenne 
+let bot = BotYanis.player_lacenne

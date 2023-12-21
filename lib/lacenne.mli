@@ -1,4 +1,4 @@
 open Engine
 
-val botYanis :
+val bot :
   player -> board -> move list -> (move option * capture option) option Lwt.t
