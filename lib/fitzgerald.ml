@@ -1,4 +1,4 @@
-open Fanorona.Engine
+open Engine
 
 let moves_and_capture_startegy player board move_chain =
   match get_all_moves board player with
