@@ -11,7 +11,7 @@ homepage: "https://github.com/yactam/fanorona"
 doc: "https://url/to/documentation"
 bug-reports: "https://github.com/yactam/fanorona/issues"
 depends: [
-  "ocaml"
+  "ocaml" {>= "5.1"}
   "dune" {>= "3.11"}
   "ppx_deriving"
   "alcotest" {with-test}
