@@ -32,10 +32,10 @@ let () =
               match result.endgame with
               | Win W -> incr wins_i
               | Win B -> incr wins_j
-              | Giveup W -> decr wins_i
-              | Giveup B -> decr wins_j
+              | Giveup W -> incr wins_j
+              | Giveup B -> incr wins_i
             with
-            | _ -> (* Draw *) ()
+            | _ -> (* Draw: no-one wins *) ()
           end;
           begin try
               let result =
@@ -43,15 +43,15 @@ let () =
               match result.endgame with
               | Win W -> incr wins_j
               | Win B -> incr wins_i
-              | Giveup W -> decr wins_j
-              | Giveup B -> decr wins_i
-            with _ -> (* Draw *)  ()
+              | Giveup W -> incr wins_i
+              | Giveup B -> incr wins_j
+            with _ -> (* Draw: no-one wins *)  ()
           end;
         done;
       with
       | _ ->
         begin
-          (* Time-out *)
+          (* Time-out: produce awkward value *)
           wins_i := -1;
           wins_j := -1
         end;
