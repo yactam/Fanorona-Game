@@ -1,3 +1,15 @@
+# Tournament
+
+To run a tournament, use:
+
+```bash
+dune exec fanorona > result.txt
+```
+
+The standard error output shows the current player (in case someone
+goes into an infinite loop) while `result.txt` shows the result of the
+tournament.
+
 # Fanorona
 
 [![My Skills](https://skillicons.dev/icons?i=ocaml,git,gitlab,github,vim,vscode)](https://skillicons.dev)
