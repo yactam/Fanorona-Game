@@ -1,9 +1,11 @@
 open Fanorona.Arena
 
-let players = [| ("Fanorona.random1", player_random);
-                 ("Lacenne", Fanorona.Lacenne.bot);
-                 ("Abounaim", Fanorona.Abounaim.minimax_player);
-                 (* ("Rzeszutek", player_artacalan) *) |]
+let wrap s player = (s, fun p b ms -> Printf.eprintf "\r                    "; Printf.eprintf "\r%s%!" s; player p b ms)
+
+let players = [| wrap "Fanorona.random" player_random;
+                 wrap "Lacenne" Fanorona.Lacenne.bot;
+                 (* wrap "Abounaim" Fanorona.Abounaim.minimax_player; *)
+                 wrap "Rzeszutek" player_artacalan |]
 
 let () =
   Random.self_init ();
@@ -15,26 +17,49 @@ let () =
       let max_games = 500 in
       let wins_i = ref 0 in
       let wins_j = ref 0 in
-      for _ = 0 to max_games - 1 do
-        let result =
-          Lwt_main.run (arena (pair ~w:(player_i W) ~b:(player_j B))) in
-        match result.endgame with
-        | Win W -> incr wins_i
-        | Win B -> incr wins_j
-        | Giveup W -> decr wins_i
-        | Giveup B -> decr wins_j
-      done;
-      for _ = 0 to max_games - 1 do
-        let result =
-          Lwt_main.run (arena (pair ~b:(player_i B) ~w:(player_j W))) in
-        match result.endgame with
-        | Win W -> incr wins_j
-        | Win B -> incr wins_i
-        | Giveup W -> decr wins_j
-        | Giveup B -> decr wins_i
-      done;
-      Format.printf "@[<h 4>%s@;<4 4>%d@;<4 4>%s@;<4 4>%d@]@;" pi !wins_i pj !wins_j ;
+      let t = Sys.time () in
+      begin
+      try
+        for k = 0 to max_games - 1 do
+          if Sys.time () -. t >= float_of_int (k + 1)  then
+            begin
+              failwith "Taking too long"
+            end;
+          begin try
+              let result =
+                Lwt_main.run (arena (pair ~w:(player_i W) ~b:(player_j B))) in
+              match result.endgame with
+              | Win W -> incr wins_i
+              | Win B -> incr wins_j
+              | Giveup W -> decr wins_i
+              | Giveup B -> decr wins_j
+            with
+            | _ -> (* Draw *) ()
+          end;
+          begin try
+              let result =
+                Lwt_main.run (arena (pair ~b:(player_i B) ~w:(player_j W))) in
+              match result.endgame with
+              | Win W -> incr wins_j
+              | Win B -> incr wins_i
+              | Giveup W -> decr wins_j
+              | Giveup B -> decr wins_i
+            with _ -> (* Draw *)  ()
+          end;
+        done;
+      with
+      | _ ->
+        begin
+          (* Time-out *)
+          wins_i := -1;
+          wins_j := -1
+        end;
+    end;
+      let wins_i_ratio = (!wins_i * 100) / (2 * max_games) in
+      let wins_j_ratio = (!wins_j * 100) / (2 * max_games) in
+      Format.printf "@[<h 4>%.1f@;<4 4>%s@;<4 4>%d@;<4 4>%s@;<4 4>%d@]@;" ((Sys.time () -. t) *. (1000. /. (2. *. float_of_int max_games))) pi wins_i_ratio pj wins_j_ratio ;
     done
   done;
   Format.close_box ();
-  Format.printf "@."
+  Format.printf "@.";
+  Printf.eprintf "\n"

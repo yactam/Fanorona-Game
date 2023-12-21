@@ -13,7 +13,9 @@ let pp_endgame out_c = function
 let arena ?(init_player : player = W) ?(init_board = Engine.initial_state_5x9)
     players =
   let open Lwt.Syntax in
-  let rec go board player trace move_chain =
+  let rec go n board player trace move_chain =
+    if n >= 1000 then
+      failwith "Taking too long";
     let opponent = swap player in
     if win board opponent then
       Lwt.return
@@ -21,23 +23,20 @@ let arena ?(init_player : player = W) ?(init_board = Engine.initial_state_5x9)
     else
       let* r = players player board move_chain in
       match r with
-      | Some (None, None) | Some (None, _) -> go board player trace move_chain
+      | Some (None, None) | Some (None, _) -> go (n+1) board player trace move_chain
       | None ->
           Lwt.return
             { trace = List.rev trace; endgame = Giveup player; final = board }
-      | Some (Some move, capture_option) -> (
+      | Some (Some move, capture_option) ->
           let is_capture = capture_option <> None in
-          try
-            let board', move_chain' =
-              make_move board player move capture_option move_chain
-            in
-            if is_capture && can_continue board' player move move_chain' then
-              go board' player (move :: trace) move_chain'
-            else go board' opponent (move :: trace) []
-          with _ ->
-            go board player trace move_chain)
+          let board', move_chain' =
+            make_move board player move capture_option move_chain
+          in
+          if is_capture && can_continue board' player move move_chain' then
+            go (n+1) board' player (move :: trace) move_chain'
+          else go (n+1) board' opponent (move :: trace) []
   in
-  go init_board init_player [] []
+  go 0 init_board init_player [] []
 
 let player_giveup _board _move_chain = Lwt.return None
 
