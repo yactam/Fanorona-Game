@@ -1,4 +1,4 @@
 (executable
  (public_name fanorona)
  (name main)
- (libraries fanorona ia lwt lwt.unix))
+ (libraries fanorona lwt lwt.unix))

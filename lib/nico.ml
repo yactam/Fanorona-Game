@@ -1,4 +1,4 @@
-open Fanorona.Engine
+open Engine
 
 let in_board x y= x>=0 && x<nb_rows && y>=0 && y<nb_cols
 
