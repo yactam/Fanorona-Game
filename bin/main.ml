@@ -2,7 +2,7 @@ open Fanorona.Arena
 
 let players = [| ("Fanorona.random1", player_random);
                  ("Fanorona.random2", player_random);
-                 ("Fanorona.random3", player_random) |]
+                 ("Lacenne", Fanorona.Lacenne.bot) |]
 
 let () =
   Random.self_init ();
