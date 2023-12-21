@@ -153,3 +153,75 @@ let player_random player board move_chain =
          ( move_option,
            if type_capture_option = Some Both then Some Approach
            else type_capture_option ))
+
+let player_artacalan player board move_chain =
+  let all_moves = get_all_moves board player in
+  if List.is_empty all_moves then Lwt.return None
+  else
+    let capture_moves =
+      List.filter
+        (fun m ->
+          type_capture_move board m player <> None
+          && (List.is_empty move_chain
+             || is_last_pawn_position_move m move_chain))
+        all_moves
+    in
+    let random_element lst =
+      let len = List.length lst in
+      if len = 0 then None else Some (List.nth lst (Random.int len))
+    in
+    let take_the_best_capture_move lst =
+      let rec aux1 lst =
+        match lst with
+        | [] -> []
+        | h :: t -> (type_capture_move board h player, h) :: aux1 t
+      in
+      let rec aux2 lst acc1 acc2 =
+        match lst with
+        | [] -> acc1
+        | (None, _) :: _ -> acc1
+        | (Some s, h2) :: t ->
+            if s = Both then
+              let pawns1 = count_pawn_to_down_approchal board player h2 in
+              let pawns2 = count_pawn_to_down_withdrawal board player h2 in
+              let pawns = if pawns1 > pawns2 then pawns1 else pawns2 in
+              match acc1 with
+              | None -> aux2 t (Some h2) (Some pawns)
+              | _ ->
+                  if pawns > Option.get acc2 then aux2 t (Some h2) (Some pawns)
+                  else aux2 t acc1 acc2
+            else if s = Approach then
+              let pawns = count_pawn_to_down_approchal board player h2 in
+              match acc1 with
+              | None -> aux2 t (Some h2) (Some pawns)
+              | _ ->
+                  if pawns > Option.get acc2 then aux2 t (Some h2) (Some pawns)
+                  else aux2 t acc1 acc2
+            else if s = Withdrawal then
+              let pawns = count_pawn_to_down_withdrawal board player h2 in
+              match acc1 with
+              | None -> aux2 t (Some h2) (Some pawns)
+              | _ ->
+                  if pawns > Option.get acc2 then aux2 t (Some h2) (Some pawns)
+                  else aux2 t acc1 acc2
+            else acc1
+      in
+      let l1 = aux1 lst in
+      aux2 l1 None None
+    in
+    let move_option =
+      let len = List.length capture_moves in
+      if len = 0 then random_element all_moves
+      else take_the_best_capture_move capture_moves
+    in
+    let type_capture_option =
+      match move_option with
+      | None -> None
+      | Some m -> type_capture_move board m player
+    in
+    Lwt.return
+      (Some
+         ( move_option,
+           if type_capture_option = Some Both then
+             if Random.int 2 = 0 then Some Approach else Some Withdrawal
+           else type_capture_option ))

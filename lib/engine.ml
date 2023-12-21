@@ -360,3 +360,40 @@ let make_move board player move capture move_chain =
             raise Capture_move_restrictions_broken
           else (make_capture_by_withdrawal board move player, move :: move_chain)
         else raise Choice_required
+
+let count_pawn_to_down_approchal board player move =
+  let start_pos = get_destination_pos move in
+  let empty_cell = get_destination_pos { move with position = start_pos } in
+  let first_cell = destination_pos { move with position = empty_cell } in
+  let rec aux board player pos dir acc =
+    match pos with
+    | None -> acc
+    | Some c -> (
+        match get2 board c with
+        | Empty -> acc
+        | Pawn p ->
+            if opponent player = p then
+              aux board player
+                (destination_pos { position = c; direction = dir })
+                dir (acc + 1)
+            else acc)
+  in
+  aux board player first_cell move.direction 0
+
+let count_pawn_to_down_withdrawal board player move =
+  let good_move = { move with direction = rev_dir move.direction } in
+  let first_cell = destination_pos good_move in
+  let rec aux board player pos dir acc =
+    match pos with
+    | None -> acc
+    | Some c -> (
+        match get2 board c with
+        | Empty -> acc
+        | Pawn p ->
+            if opponent player = p then
+              aux board player
+                (destination_pos { position = c; direction = dir })
+                dir (acc + 1)
+            else acc)
+  in
+  aux board player first_cell good_move.direction 0
