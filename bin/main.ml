@@ -2,6 +2,7 @@ open Fanorona.Arena
 
 let players = [| ("Fanorona.random1", player_random);
                  ("Lacenne", Fanorona.Lacenne.bot);
+                 ("Abounaim", Fanorona.Abounaim.minimax_player);
                  (* ("Rzeszutek", player_artacalan) *) |]
 
 let () =
