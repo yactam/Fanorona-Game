@@ -132,6 +132,6 @@ let count_player board player =
     | i, j when j >= nb_cols -> aux acc (i + 1) 0
     | i, j ->
         let cell = get board (Pos.h i) (Pos.v j) in
-        aux (if cell = Pawn player then acc + 1 else acc) i (j + 1)
+        aux (if cell = Pawn player then acc+1 else acc) i (j + 1)
   in
   aux 0 0 0
