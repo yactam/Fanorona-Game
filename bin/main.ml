@@ -4,9 +4,9 @@ let wrap s player = (s, fun p b ms -> Printf.eprintf "\r                    "; P
 
 let players = [| wrap "Fanorona.random" player_random;
                  wrap "Lacenne" Fanorona.Lacenne.bot;
-                 (* wrap "Abounaim" Fanorona.Abounaim.minimax_player; *)
+                 wrap "Abounaim" Fanorona.Abounaim.minimax_player;
                  wrap "Rzeszutek" player_artacalan;
-                 (* wrap "Coutard" Fanorona.Coutard.player; *)
+                 wrap "Coutard" Fanorona.Coutard.player;
                  wrap "Nico" Fanorona.Nico.ia_player;
                  wrap "Fitzgerald" Fanorona.Fitzgerald.execute ;
                  wrap "Hijazi" Fanorona.Hijazi.custom_player ;
