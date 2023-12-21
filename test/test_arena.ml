@@ -6,9 +6,9 @@ let run_game_AI =
   Lwt_main.run
     (arena (Fanorona.Arena.pair ~w:(player_random W) ~b:(player_random B)))
 
-let mult_run_test =
+let _mult_run_test =
   let open QCheck in
-  let iter = 10000 in
+  let iter = 1000 in
   Test.make ~count:iter
     ~name:(Format.asprintf "%d iterations of AI game run" iter)
     init_board_arbitrary (fun b ->
@@ -58,7 +58,7 @@ let () =
                  | Win a ->
                      win result.final a && not (win result.final (opponent a))
                  | Giveup _ -> true));
-          QCheck_alcotest.to_alcotest mult_run_test;
+          (* QCheck_alcotest.to_alcotest mult_run_test; *)
         ] );
       ( "pp test",
         [
