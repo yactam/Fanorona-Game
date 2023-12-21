@@ -34,8 +34,7 @@ let arena ?(init_player : player = W) ?(init_board = Engine.initial_state_5x9)
             if is_capture && can_continue board' player move move_chain' then
               go board' player (move :: trace) move_chain'
             else go board' opponent (move :: trace) []
-          with e ->
-            Format.printf "%s@." (Printexc.to_string e);
+          with _ ->
             go board player trace move_chain)
   in
   go init_board init_player [] []
